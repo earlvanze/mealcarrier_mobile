@@ -1,0 +1,10 @@
+{
+  "name": "mealcarrier",
+  "app_id": "",
+  "watchPatterns": [
+    "www/*",
+    "www/**/*",
+    "!www/*~",
+    "!www/**/*~"
+  ]
+}
