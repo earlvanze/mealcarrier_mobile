@@ -1,5 +1,13 @@
 <ion-view view-title="Request Pickup">
   <ion-content>
-    Request Pickup
+
+    <ion-list ng-repeat="place in places">
+      <a href="#/delivery_details/{{place.id}}" class="item">
+	<h3>
+	  {{place.name}}
+	</h3>
+	{{place.address}}
+      </a>
+    </ion-list>
   </ion-content>
 </ion-view>

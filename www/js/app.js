@@ -31,7 +31,13 @@ angular.module("mealcarrier", ["ionic", "mealcarrier.controller"])
     })
     .state("request_pickup", {
 	url: "/request_pickup",
+	controller: "request_controller",
 	templateUrl: "templates/request_pickup.html"
+    })
+    .state("delivery_details", {
+	url: "/delivery_details/:place_id",
+	controller: "delivery_details_controller",
+	templateUrl: "templates/delivery_details.html"
     })
     ;
 
