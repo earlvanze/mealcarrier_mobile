@@ -2,9 +2,12 @@
   "name": "mealcarrier",
   "app_id": "",
   "watchPatterns": [
-    "www/*",
-    "www/**/*",
-    "!www/*~",
-    "!www/**/*~"
-  ]
+    "!www/js/.#*",
+    "!www/**/.#*",
+    "!www/templates/.#*",
+    "!www/.#*",
+    "www/js/[a-zA-Z0-9]*.js",
+    "www/*.html",
+    "www/**/*.html"
+   ] 
 }

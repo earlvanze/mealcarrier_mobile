@@ -15,12 +15,15 @@
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
+    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDDE09q45122633N8OC1aoD6kXj56u5vHg&sensor=true"></script>
+
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
     <script src="js/app.js"></script>
-    <script src="js/controller.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
   </head>
   <body ng-app="mealcarrier" ng-cloak>
 
@@ -39,7 +42,7 @@
 	    <ion-item ui-sref="request_pickup" menu-close>
 	      Request Pickup
 	    </ion-item>
-	    <ion-item>
+	    <ion-item ui-sref="deliveries" menu-close>
 	      Deliveries
 	    </ion-item>
 	  <ion-item>

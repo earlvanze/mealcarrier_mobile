@@ -39,6 +39,11 @@ angular.module("mealcarrier", ["ionic", "mealcarrier.controller"])
 	controller: "delivery_details_controller",
 	templateUrl: "templates/delivery_details.html"
     })
+    .state("deliveries", {
+	url: "/deliveries",
+	controller: "deliveries_controller",
+	templateUrl: "templates/deliveries.html"
+    })
     ;
 
     $urlRouterProvider.otherwise("/login");
