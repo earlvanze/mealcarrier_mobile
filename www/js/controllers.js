@@ -1,23 +1,27 @@
 angular.module("mealcarrier.controller", ["mealcarrier.services"])
 
-.controller("menu_controller", function($scope, $ionicSideMenuDelegate){
+.controller("menu_controller", function($scope, $ionicSideMenuDelegate, $state){
 
 })
 
-.controller("login_controller", function($scope, $http){
+.controller("login_controller", function($scope, $http, $state){
     $scope.credentials = {};
     $scope.authenticate = function(){
 	$http({
 	    url: "http://mealcarrier.com:8080/authenticate",
 	    method: "POST",
 	    data:{
-		"email": "something"//$scope.credentials.email,
-//		"password": $scope.credentials.password
+		"email": $scope.credentials.email,
+		"password": $scope.credentials.password
 	    }
 	})
 	.then(function($response){
 	    //success
+	    $scope.credentials.token = $response.data.token;
 	    console.log($response);
+	    console.log($scope.credentials.token);
+		$state.go('request_pickup')
+
 	}, function($response){
 	    console.log($response);
 	    console.log("error");
@@ -48,7 +52,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services"])
 	    }
 	);
     }
-    $scope.today = "20th June 2015";
+    $scope.today = Date.now;
 })
 
 
