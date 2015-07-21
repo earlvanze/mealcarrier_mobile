@@ -19,10 +19,18 @@ angular.module("mealcarrier", ["ionic", "mealcarrier.controller"])
   });
 })
 
+.config(['$httpProvider', function($httpProvider) {
+//   $httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
+   $httpProvider.defaults.headers.post["Content-Type"] = "application/json; charset=UTF-8";
+   $httpProvider.defaults.useXDomain = true;
+   delete $httpProvider.defaults.headers.common['X-Requested-With'];
+}])
+
 .config(function($stateProvider, $urlRouterProvider){
     $stateProvider
     .state("login", {
 	url: "/login",
+	controller: "login_controller",
 	templateUrl: "templates/login.html"
     })
     .state("register", {

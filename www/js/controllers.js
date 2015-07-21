@@ -4,8 +4,29 @@ angular.module("mealcarrier.controller", ["mealcarrier.services"])
 
 })
 
-.controller("request_controller", function($scope, $q, Restaurants){
+.controller("login_controller", function($scope, $http){
+    $scope.credentials = {};
+    $scope.authenticate = function(){
+	$http({
+	    url: "http://mealcarrier.com:8080/authenticate",
+	    method: "POST",
+	    data:{
+		"email": "something"//$scope.credentials.email,
+//		"password": $scope.credentials.password
+	    }
+	})
+	.then(function($response){
+	    //success
+	    console.log($response);
+	}, function($response){
+	    console.log($response);
+	    console.log("error");
+	    //error
+	});
+  }
+})
 
+.controller("request_controller", function($scope, $q, Restaurants){
     var promise = Restaurants.get_all();
     promise.then(
 	function($restaurants){
@@ -27,8 +48,6 @@ angular.module("mealcarrier.controller", ["mealcarrier.services"])
 	    }
 	);
     }
-
-
     $scope.today = "20th June 2015";
 })
 

@@ -1,7 +1,5 @@
 angular.module("mealcarrier.services", [])
-
-    .service("Restaurants", ["$http", "$q", function($http, $q){    
-	
+    .service("Restaurants", ["$http", "$q", function($http, $q){	
 	$last_modified = "never";
 	update_all = function($deferred){
 	    console.log("Checking timestamp of server's db");
@@ -22,7 +20,6 @@ angular.module("mealcarrier.services", [])
 		    // our cache is fine
 		    $deferred.resolve($restaurants);
 		}
-
 	    });
     };
 
