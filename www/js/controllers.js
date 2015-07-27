@@ -24,7 +24,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services"])
 
 	}, function($response){
 	    console.log($response);
-	    console.log("error");
+	    console.log("Error: Can't connect to server.");
 	    //error
 	});
   }
@@ -139,7 +139,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services"])
 		$scope.deliveries = $data;
 	    })
 	    .error(function($data, $status, $headers, $config){
-		alert("Error");
+		alert("Error: Can't connect to server.");
 	    });
     };
 
