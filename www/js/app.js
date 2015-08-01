@@ -159,6 +159,16 @@ angular.module("mealcarrier",
         requiresLogin: true
       }
     })
+    .state("chat", {
+      url: "/chat",
+      // controller: "chat_controller",
+      // templateUrl: "templates/deliveries.html"
+    })
+    .state("account", {
+      url: "/account",
+      // controller: "chat_controller",
+      // templateUrl: "templates/deliveries.html"
+    })
     ;
 
     $urlRouterProvider.otherwise("/request_pickup");

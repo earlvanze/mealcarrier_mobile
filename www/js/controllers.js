@@ -28,7 +28,9 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 			    // We need to save the information from the login
 			    $scope.credentials.token = $response.data.token;
 			    store.set('credentials', $scope.credentials);
+			    store.set('user_id', jwtHelper.decodeToken($response.data.token)._id);
 			    store.set('token', $response.data.token);
+			    console.log(store.get('user'));
 		    	console.log($response.data.message);
     		    console.log($scope.credentials.token);
     		    // console.log(jwtHelper.decodeToken(store.get('token')));
@@ -126,16 +128,12 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 })
 
 
-.controller("delivery_details_controller", function($scope, $state, $stateParams, $http){
-
-
+.controller("delivery_details_controller", function($scope, $state, $stateParams, $http, store){
     latitude = 40.6944;
     longitude = -73.9861;
-    
-    $scope.position = {};
-    
-    $scope.position.latitude = latitude;
-    $scope.position.longitude = longitude;
+    $scope.request = {};
+    $scope.request.latitude = latitude;
+    $scope.request.longitude = longitude;
     
     var myLatlng = new google.maps.LatLng($scope.latitude, $scope.longitude);
     
@@ -159,8 +157,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
         });
 	marker.setMap(map);
 	google.maps.event.addListener(marker, "dragend", function(){
-	    $scope.position.latitude = marker.getPosition().lat();
-	    $scope.position.longitude = marker.getPosition().lng();
+	    $scope.request.latitude = marker.getPosition().lat();
+	    $scope.request.longitude = marker.getPosition().lng();
 	    $scope.$apply();
 	});
     });
@@ -173,17 +171,18 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     };
     
     $scope.send_request = function(){
-		console.log("Sending request");
+		console.log("Sending request...");
 		$http({
 		    url: "http://mealcarrier.com:8080/requests/create",
 		    method: "POST",
 		    data: {
-				user_id: 1,
+				user_id: store.get('user_id'),
 				dropoff_latitude: marker.getPosition().lat(),
 				dropoff_longitude: marker.getPosition().lng(),
 				pickup_latitude: 0,
 				pickup_longitude: 0,
-				restaurant_id: $stateParams.restaurant_id
+				restaurant_id: $stateParams.restaurant_id,
+				delivery_notes: $scope.request.delivery_notes
 		    }
 		})
 		.then(function($response){
@@ -216,7 +215,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     // $scope.deliveries = [{}, {}];
 })
 
-.controller("request_details_controller", function($scope, $state, $stateParams, $http){
+.controller("request_details_controller", function($scope, $state, $stateParams, $http, store){
 	$scope.request = {};
 	console.log($stateParams.request_id)
 	$http({
@@ -237,10 +236,10 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     latitude = 40.6944;
     longitude = -73.9861;
     
-    $scope.position = {};
+    $scope.request = {};
     
-    $scope.position.latitude = latitude;
-    $scope.position.longitude = longitude;
+    $scope.request.latitude = latitude;
+    $scope.request.longitude = longitude;
     
  //    var myLatlng = new google.maps.LatLng($scope.latitude, $scope.longitude);
     
@@ -264,8 +263,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
  //        });
 	// marker.setMap(map);
 	// google.maps.event.addListener(marker, "dragend", function(){
-	//     $scope.position.latitude = marker.getPosition().lat();
-	//     $scope.position.longitude = marker.getPosition().lng();
+	//     $scope.request.latitude = marker.getPosition().lat();
+	//     $scope.request.longitude = marker.getPosition().lng();
 	//     $scope.$apply();
 	// });
  //    });
@@ -283,8 +282,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
 		    method: "PUT",
 		    data: {
-		    	accepted: 'TRUE',
-		    	carrier: "[carrier_id]"
+		    	accepted: true,
+		    	carrier_id: store.get('user_id')
 		    }
 		})
 		.then(function($response){
