@@ -91,34 +91,6 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     		    console.log($scope.user.token);
 		    	$state.go('request_pickup');
 		    }
-		 //    $http({
-			//     url: "http://mealcarrier.com:8080/authenticate",
-			//     method: "POST",
-			//     data:{
-			// 		"email": $scope.user.email,
-			// 		"password": $scope.user.password
-			//     }
-			// })
-			// .then(function($response){
-			//     //success
-			//     console.log($response);
-			//     console.log($scope.user.token);
-			//     if (!$response.data.success){
-			//     	if($response.data.message == "Authentication failed. Wrong password."){
-			//     		console.log("Email address exists!");
-			//     	}
-			//     	console.log($response.data.message);
-			//     } else {
-			//     	console.log($response.data.message);
-			// 	    $scope.user.token = $response.data.token;
-	  //   		    console.log($scope.user.token);
-			//     	$state.go('request_pickup');
-			//     }
-			// }, function($response){
-			//     console.log($response);
-			//     console.log("Error: Can't connect to server.");
-			//     //error
-			// });
 		},
 		function($response){
 		    console.log($response);
@@ -154,7 +126,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 })
 
 
-.controller("delivery_details_controller", function($scope, $stateParams, $http){
+.controller("delivery_details_controller", function($scope, $state, $stateParams, $http){
 
 
     latitude = 40.6944;
@@ -210,12 +182,14 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 				dropoff_latitude: marker.getPosition().lat(),
 				dropoff_longitude: marker.getPosition().lng(),
 				pickup_latitude: 0,
-				pickup_longitude: 0
+				pickup_longitude: 0,
+				restaurant_id: $stateParams.restaurant_id
 		    }
 		})
 		.then(function($response){
 		    //success
 		    console.log($response);
+		    $state.go('deliveries');
 		}, function($response){
 		    console.log("Error: Could not submit request.");
 		    //error
@@ -238,18 +212,27 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    console.log("Error: Can't connect to server or not authorized.");
 		    //error
 		});
-	 //    .success(function($data, $status, $headers, $config){
-		// 	console.log($data);
-		// })
-	  //   .error(function($data, $status, $headers, $config){
-			// alert("Error: Can't connect to server or not authorized.");
-   //  	});
     }
     // $scope.deliveries = [{}, {}];
 })
 
-.controller("request_details_controller", function($scope, $stateParams, $http){
-
+.controller("request_details_controller", function($scope, $state, $stateParams, $http){
+	$scope.request = {};
+	console.log($stateParams.request_id)
+	$http({
+	    method: "GET",
+	    url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id
+	})
+	.then(function($response){
+	    //success
+	    $scope.request = $response.data;
+	    console.log($scope.request);
+	    // $state.go('chat');
+	}, function($response){
+	    console.log($response);
+	    console.log("Error: Can't connect to server or not authorized.");
+	    //error
+	});
 
     latitude = 40.6944;
     longitude = -73.9861;
@@ -259,48 +242,48 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     $scope.position.latitude = latitude;
     $scope.position.longitude = longitude;
     
-    var myLatlng = new google.maps.LatLng($scope.latitude, $scope.longitude);
+ //    var myLatlng = new google.maps.LatLng($scope.latitude, $scope.longitude);
     
-    var mapOptions = {
-        center: myLatlng,
-        zoom: 16,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
+ //    var mapOptions = {
+ //        center: myLatlng,
+ //        zoom: 16,
+ //        mapTypeId: google.maps.MapTypeId.ROADMAP
+ //    };
     
-    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-    var marker = null;
+ //    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+ //    var marker = null;
 
 
-    navigator.geolocation.getCurrentPosition(function(pos) {
-	map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
+ //    navigator.geolocation.getCurrentPosition(function(pos) {
+	// map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 	
-        marker = new google.maps.Marker({
-	    position: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
-	    map: map,
-	    draggable: true
-        });
-	marker.setMap(map);
-	google.maps.event.addListener(marker, "dragend", function(){
-	    $scope.position.latitude = marker.getPosition().lat();
-	    $scope.position.longitude = marker.getPosition().lng();
-	    $scope.$apply();
-	});
-    });
+ //        marker = new google.maps.Marker({
+	//     position: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
+	//     map: map,
+	//     draggable: true
+ //        });
+	// marker.setMap(map);
+	// google.maps.event.addListener(marker, "dragend", function(){
+	//     $scope.position.latitude = marker.getPosition().lat();
+	//     $scope.position.longitude = marker.getPosition().lng();
+	//     $scope.$apply();
+	// });
+ //    });
     
     
-    $scope.center_on_me = function(){
-	navigator.geolocation.getCurrentPosition(function(pos) {
-            marker.setPosition({lat: pos.coords.latitude, lng: pos.coords.longitude});	    
-	});
-    };
+ //    $scope.center_on_me = function(){
+	// navigator.geolocation.getCurrentPosition(function(pos) {
+ //            marker.setPosition({lat: pos.coords.latitude, lng: pos.coords.longitude});	    
+	// });
+ //    };
     
-    $scope.confirm_delivery = function(){
+    $scope.accept_delivery = function(){
 		console.log("Confirming delivery");
 		$http({
-		    url: "http://mealcarrier.com:8080/requests/:request_id",
+		    url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
 		    method: "PUT",
 		    data: {
-		    	accepted: TRUE,
+		    	accepted: 'TRUE',
 		    	carrier: "[carrier_id]"
 		    }
 		})

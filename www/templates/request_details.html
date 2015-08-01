@@ -18,7 +18,7 @@
 	<span class="input-label">
 	  Delivery Notes
 	</span>
-	<textarea placeholder="Ex. specific room location in building"></textarea>
+    {{request.special_instructions}}
       </label>
     </div>
     <div style="text-align: center">
@@ -28,8 +28,8 @@
 	 >
 	My Current Location
       </button>
-      <button class="button button-positive" ng-click="confirm_delivery()">
-	Confirm
+      <button class="button button-positive" ng-click="accept_delivery()">
+	Accept Delivery
       </button>
     </div>
   </ion-content>

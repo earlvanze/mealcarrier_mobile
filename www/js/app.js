@@ -139,7 +139,7 @@ angular.module("mealcarrier",
     	templateUrl: "templates/request_pickup.html"
     })
     .state("delivery_details", {
-    	url: "/delivery_details/:place_id",
+    	url: "/delivery_details/:restaurant_id",
     	controller: "delivery_details_controller",
     	templateUrl: "templates/delivery_details.html",
       data: {
