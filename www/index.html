@@ -24,6 +24,19 @@
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+    <script src="js/form-validate-after.js"></script>
+
+    <!-- Auth0 Lock -->
+    <script src="lib/auth0-lock/build/auth0-lock.js"></script>
+
+    <!-- auth0-angular -->
+    <script src="lib/auth0-angular/build/auth0-angular.js"></script>
+
+    <!-- angular storage -->
+    <script src="lib/angular-storage/dist/angular-storage.js"></script>
+
+    <!-- angular-jwt -->
+    <script src="lib/angular-jwt/dist/angular-jwt.js"></script>
   </head>
   <body ng-app="mealcarrier" ng-cloak>
 
@@ -39,6 +52,9 @@
 	<ion-content>
 
 	  <ion-list>
+      <ion-item ui-sref="login" menu-close>
+        Login
+      </ion-item>
 	    <ion-item ui-sref="request_pickup" menu-close>
 	      Request Pickup
 	    </ion-item>

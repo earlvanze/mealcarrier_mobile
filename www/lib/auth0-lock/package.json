@@ -1,0 +1,92 @@
+{
+  "name": "auth0-lock",
+  "version": "7.5.4",
+  "description": "Auth0 Lock",
+  "main": "./index.js",
+  "keywords": [
+    "auth0",
+    "auth",
+    "openid",
+    "authentication",
+    "jwt",
+    "browser"
+  ],
+  "scripts": {
+    "test": "grunt integration",
+    "example": "grunt example",
+    "dev": "grunt dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/auth0/lock.git"
+  },
+  "author": {
+    "name": "Auth0",
+    "email": "support@auth0.com",
+    "url": "http://auth0.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "auth0-js": "~6.4.2",
+    "bean": "~1.0.4",
+    "blueimp-md5": "^1.1.0",
+    "bonzo": "^1.3.6",
+    "debug": "^2.1.2",
+    "domready": "~0.2.13",
+    "password-sheriff": "^0.4.0",
+    "sizzle": "^2.0.0",
+    "trim": "0.0.1",
+    "underscore": "~1.5.2"
+  },
+  "devDependencies": {
+    "brfs": "0.0.8",
+    "browserify": "^8.1.1",
+    "bump": "git://github.com/ianstormtaylor/bump.git",
+    "css-prefix": "0.0.2",
+    "ejsify": "0.1.0",
+    "expect.js": "~0.2.0",
+    "grunt": "^0.4.5",
+    "grunt-autoprefixer": "~0.4.0",
+    "grunt-aws-s3": "~0.9.3",
+    "grunt-browserify": "~3.3.0",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.7.0",
+    "grunt-contrib-less": "~0.8.1",
+    "grunt-contrib-outdated": "~0.0.1",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-exec": "~0.4.2",
+    "grunt-fastly": "~0.1.3",
+    "grunt-http": "^1.5.0",
+    "jquery": "^2.1.3",
+    "mocha": "1.20.1",
+    "mold-source-map": "^0.3.0",
+    "packageify": "^0.2.0",
+    "phantomjs": "^1.9.7-15",
+    "rimraf": "~2.2.2",
+    "through": "^2.3.4",
+    "uglify-js": "~2.4.15",
+    "zuul": "https://github.com/jfromaniello/zuul/tarball/phantom_custom_port",
+    "zuul-ngrok": "^2.0.1"
+  },
+  "browserify": {
+    "transform": [
+      "ejsify",
+      "brfs",
+      "packageify"
+    ]
+  },
+  "readme": "[![Auth0](https://cldup.com/yYelLVuXby.jpg)](http://auth0.com)\n\n# Lock\n[![NPM version][npm-image]][npm-url]\n[![Build status][strider-image]][strider-url]\n[![Test coverage][coveralls-image]][coveralls-url]\n[![Dependency Status][david-image]][david-url]\n[![License][license-image]][license-url]\n[![Downloads][downloads-image]][downloads-url]\n\n[Auth0](https://auth0.com) is an authentication broker that supports social identity providers as well as enterprise identity providers such as Active Directory, LDAP, Google Apps, Salesforce.\n\nLock makes it easy to integrate SSO in your app. You won't have to worry about:\n\n* Having a professional looking login dialog that displays well on any resolution and device.\n* Finding the right icons for popular social providers.\n* Remembering what was the identity provider the user chose the last time.\n* Solving the home realm discovery challenge with enterprise users (i.e.: asking the enterprise user the email, and redirecting to the right enterprise identity provider).\n* Implementing a standard sign in protocol (OpenID Connect / OAuth2 Login)\n\n[![Auth0](https://i.cloudup.com/6opoEX_Z9z.png)](http://auth0.com)\n\n> You can try it out yourself online at our [Auth0 Lock playground][playground-url].\n\n## Install\n\nFrom [npm](https://npmjs.org):\n\n```sh\nnpm install auth0-lock\n```\n\nFrom [bower](http://bower.io):\n\n```sh\nbower install auth0-lock\n```\n\nOr our CDN:\n\n```html\n<!-- Latest major release -->\n<script src=\"http://cdn.auth0.com/js/lock-7.min.js\"></script>\n\n<!-- Latest minor release -->\n<script src=\"http://cdn.auth0.com/js/lock-7.x.min.js\"></script>\n\n<!-- Latest patch release (recommended for production) -->\n<script src=\"http://cdn.auth0.com/js/lock-7.x.y.min.js\"></script>\n```\n\nIf you are targeting mobile audiences, it's recommended that you add:\n\n```html\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\"/>\n```\n\n### Browserify\n\nIf you are using browserify to build your project, you will need to add the following transformations required by Auth0 Lock:\n\n``` json\n{\n  \"devDependencies\": {\n    \"brfs\": \"0.0.8\",\n    \"ejsify\": \"0.1.0\",\n    \"packageify\": \"^0.2.0\"\n  }\n}\n```\n\n\n## Usage\n\nYou can use **Auth0Lock** with [Popup mode][popup-mode] or [Redirect mode][redirect-mode]. To learn more about these modes, you can read the [Authentication Modes][authentication-modes] page. \nThere are different ways of implementing them according to your application needs. To see what kind of settings you should be using you can check the [Types of Applications article][application-types].\n\n```js\n// Initialize Auth0Lock with your `clientID` and `domain`\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n\n// and deploy it\nvar login = document.querySelector('a#login')\n\nlogin.onclick = function (e) {\n  e.preventDefault();\n  lock.show(function onLogin(err, profile, id_token) {\n    if (err) {\n      // There was an error logging the user in\n      return alert(err.message);\n    }\n\n    // User is logged in\n  });\n};\n```\n\nThis is just one example of how **Auth0Lock** could work with a **Single Page Application** (_SPA_). Read the [Single Page Applications][spa-notes] and the [Regular Web Applications][webapps-notes] articles for a full explanation on how to implement those scenarios with Auth0 Lock and when to use each.\n\n\n## API\n\n### Auth0Lock(clientID, domain[, options])\n\nInitialize `Auth0Lock` with a `clientID` and the account's `domain`.\n\n```js\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n```\n\n> Note: For a full detail on options and parameters you can check the [Auth0Lock initialization][lock-initialization] wiki notes.\n\n\n### .show([options, callback])\n\nOpen the widget on `signin` mode with `signup` and `reset` button actions if enabled for the configured/default account connection.\n\nYou may call this method with a single parameter, two or even none. The following examples ilustrate this:\n\n```js\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n\n// using defaults and resolved configuration\n// from you account details\nlock.show();\n\n// passing some options\nlock.show(options);\n\n// provide with a callback `fn` to be invoked\n// at success or error authentication\nlock.show(function (err, profile, token) {});\n\n// or both options and callback\nlock.show(options, function (err, profile, token) {});\n\n```\n\n> Check the [Auth0Lock customization][lock-customization] article for more examples and options specification. Or enter the [Authentication modes][application-types] notes to learn more about implementing different authentication mechanics.\n\n### .showSignin([options, callback])\n\nOpen the widget on `signin` mode, but withouht the bottom `signup` nor `reset` button actions. This method is useful when your site has custom *signup* and *reset* links at a different form.\n\nYou may call this method with a single parameter, two or even none. The following examples ilustrate this:\n\n```js\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n\n// using defaults and resolved configuration\n// from you account details\nlock.showSignin();\n\n// passing some options\nlock.showSignin(options);\n\n// provide with a callback `fn` to be invoked\n// on `reset` success or error\nlock.showSignin(function (err, profile, token) {});\n\n// or both options and callback\nlock.showSignin(options, function (err, profile, token) {});\n```\n> Check the [Auth0Lock customization][lock-customization] article for more examples and options specification. Or enter the [Authentication modes][application-types] notes to learn more about implementing different authentication mechanics.\n\n\n### .showSignup([options, callback])\n\nOpen the widget on `signup` mode, but withouht the `cancel` button action to go back to `signin`. This method is useful when your site has custom *signin* and *reset* links at a different form.\n\nYou may call this method with a single parameter, two or even none. The following examples ilustrate this:\n\n```js\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n\n// using defaults and resolved configuration\n// from you account details\nlock.showSignup();\n\n// passing some options\nlock.showSignup(options);\n\n// provide with a callback `fn` to be invoked\n// on `reset` success or error\nlock.showSignup(function (err) {});\n\n// or both options and callback\nlock.showSignup(options, function (err) {});\n```\n> Check the [Auth0Lock customization][lock-customization] article for more examples and options specification. Or enter the [Authentication modes][application-types] notes to learn more about implementing different authentication mechanics.\n\n\n### .showReset([options, callback])\n\nOpen the widget on `reset` mode, but withouht the bottom `cancel` button action to go back to `signin`.  This method is useful when your site has custom *signin* and *signup* links at a different form.\n\nYou may call this method with a single parameter, two or even none. The following examples ilustrate this:\n\n```js\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n\n// using defaults and resolved configuration\n// from you account details\nlock.showReset();\n\n// passing some options\nlock.showReset(options);\n\n// provide with a callback `fn` to be invoked\n// on `reset` success or error\nlock.showReset(function (err) {});\n\n// or both options and callback\nlock.showReset(options, function (err) {});\n```\n> Check the [Auth0Lock customization][lock-customization] article for more examples and options specification. Or enter the [Authentication modes][application-types] notes to learn more about implementing different authentication mechanics.\n\n\n### .hide([callback])\n\nClose the widget and invoke `callback` when removed from DOM.\n\n```js\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n\n// normal display\nlock.show(options);\n\n// trigger hide when esc key pressed\ndocument.addEventListener('keypress', function(e) {\n  // hide if esc\n  lock.hide();\n}, false);\n```\n\n### .logout([query])\n\nLog out loggedin user with optional query parameters for the `GET` request.\n\n```js\nvar lock = new Auth0Lock('xxxxxx', '<account>.auth0.com');\n\n// Call logout with query parameters\nlock.logout({ ref: window.location.href });\n```\n\n## Examples\n\nThe **example** directory has a ready-to-go app. In order to run it you need [node](http://nodejs.org/) installed.\n\nThen execute `npm i` to install dependencies (only once) and `npm example` from the root of this project.\n\nFinally, point your browser at `http://localhost:3000/` and play around.\n\n## Browser Compatibility\n\nWe ensure browser compatibility in `Chrome`, `Safari`, `Firefox` and `IE >= 9`. We currently use [zuul](https://github.com/defunctzombie/zuul) along with [Saucelabs](https://saucelabs.com) to run integration tests on each push.\n\n## Issue Reporting\n\nIf you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. The [Responsible Disclosure Program](https://auth0.com/whitehat) details the procedure for disclosing security issues.\n\n## Resources\n\n* [Complete API][lock-customization]\n* [UI customization][ui-customization]\n* [Single Page Applications][spa-notes] implementation notes.\n* [Regular Web Applications][webapps-notes] implementing notes.\n* [Overlay vs Embedded mode][display-modes]\n* [Popup vs Redirect mode][authentication-modes] notes. **What are the authentication modes?**.\n* [Error customization][error-customization] notes.\n* [I18n][i18n-notes] notes.\n* [Events][events-notes] notes.\n* [Development][development-notes] notes.\n* [Release process][release-process] notes.\n* [Auth0Lock playground][playground-url]\n* [Using Refresh Tokens](https://github.com/auth0/lock/wiki/Using-a-Refresh-Token)\n* Legacy **Auth0Widget**`< v6.0.0` [repository](https://github.com/auth0/widget) and [docs](https://docs.auth0.com/login-widget2).\n* Legacy **Auth0Widget** [Migration guide][migration-guide] to **AuthoLock**\n\n<!-- Vaaaaarrsss -->\n\n[download1]: https://raw.github.com/auth0/lock/master/build/auth0-lock.js\n[download2]: https://raw.github.com/auth0/lock/master/build/auth0-lock.min.js\n\n[npm-image]: https://img.shields.io/npm/v/auth0-lock.svg?style=flat-square\n[npm-url]: https://npmjs.org/package/auth0-lock\n[strider-image]: https://ci.auth0.com/auth0/lock/badge\n[strider-url]: https://ci.auth0.com/auth0/lock\n[coveralls-image]: https://img.shields.io/coveralls/auth0/lock.svg?style=flat-square\n[coveralls-url]: https://coveralls.io/r/auth0/lock?branch=master\n[david-image]: http://img.shields.io/david/auth0/lock.svg?style=flat-square\n[david-url]: https://david-dm.org/auth0/lock\n[license-image]: http://img.shields.io/npm/l/auth0-lock.svg?style=flat-square\n[license-url]: LICENSE\n[downloads-image]: http://img.shields.io/npm/dm/auth0-lock.svg?style=flat-square\n[downloads-url]: https://npmjs.org/package/auth0-lock\n\n[lock-initialization]: https://github.com/auth0/lock/wiki/Auth0lock-initialization\n[lock-customization]: https://github.com/auth0/lock/wiki/Auth0lock-customization\n[application-types]: https://github.com/auth0/lock/wiki/Types-Of-Applications\n[display-modes]: https://github.com/auth0/lock/wiki/Display-Modes\n[spa-notes]: https://github.com/auth0/lock/wiki/Types-Of-Applications#single-page-app\n[webapps-notes]: https://github.com/auth0/lock/wiki/Types-Of-Applications#regular-webapp\n[authentication-modes]: https://github.com/auth0/lock/wiki/Authentication-Modes\n[popup-mode]: https://github.com/auth0/lock/wiki/Authentication-Modes#popup-mode\n[redirect-mode]: https://github.com/auth0/lock/wiki/Authentication-Modes#redirect-mode\n[ui-customization]: https://github.com/auth0/lock/wiki/UI-customization\n[error-customization]: https://github.com/auth0/lock/wiki/Customizing-error-messages\n[i18n-notes]: https://github.com/auth0/lock/wiki/I18n\n[events-notes]: https://github.com/auth0/lock/wiki/Events\n[development-notes]: https://github.com/auth0/lock/wiki/Development-notes\n[release-process]: https://github.com/auth0/lock/wiki/Release-process\n[playground-url]: http://auth0.github.com/playground\n[migration-guide]: https://github.com/auth0/lock/wiki/Migration-guide\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/auth0/lock/issues"
+  },
+  "homepage": "https://github.com/auth0/lock#readme",
+  "_id": "auth0-lock@7.5.4",
+  "_shasum": "02fffff4c2e8179bba0c31de1078bd117e3325d4",
+  "_resolved": "https://github.com/auth0/lock/archive/v7.5.4.tar.gz",
+  "_from": "https://github.com/auth0/lock/archive/v7.5.4.tar.gz"
+}

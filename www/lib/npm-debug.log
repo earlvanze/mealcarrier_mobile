@@ -1,0 +1,88 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'node', '/usr/local/bin/npm', 'install', 'a0-angular-storage' ]
+2 info using npm@2.11.2
+3 info using node@v0.12.5
+4 verbose install initial load of /Users/Vanze/mealcarrier_mobile/package.json
+5 warn package.json mealcarrier@1.0.0 No repository field.
+6 warn package.json mealcarrier@1.0.0 No README data
+7 warn package.json mealcarrier@1.0.0 No license field.
+8 verbose installManyTop reading scoped package data from /Users/Vanze/mealcarrier_mobile/node_modules/auth0-angular/package.json
+9 info package.json auth0-angular@4.0.4 No license field.
+10 verbose readDependencies loading dependencies from /Users/Vanze/mealcarrier_mobile/package.json
+11 silly cache add args [ 'a0-angular-storage', null ]
+12 verbose cache add spec a0-angular-storage
+13 silly cache add parsed spec { raw: 'a0-angular-storage',
+13 silly cache add   scope: null,
+13 silly cache add   name: 'a0-angular-storage',
+13 silly cache add   rawSpec: '',
+13 silly cache add   spec: '*',
+13 silly cache add   type: 'range' }
+14 silly addNamed a0-angular-storage@*
+15 verbose addNamed "*" is a valid semver range for a0-angular-storage
+16 silly addNameRange { name: 'a0-angular-storage', range: '*', hasData: false }
+17 silly mapToRegistry name a0-angular-storage
+18 silly mapToRegistry using default registry
+19 silly mapToRegistry registry https://registry.npmjs.org/
+20 silly mapToRegistry uri https://registry.npmjs.org/a0-angular-storage
+21 verbose addNameRange registry:https://registry.npmjs.org/a0-angular-storage not in flight; fetching
+22 verbose request uri https://registry.npmjs.org/a0-angular-storage
+23 verbose request no auth needed
+24 info attempt registry request try #1 at 1:35:45 AM
+25 verbose request id 82a8e6a9a60af3cc
+26 http request GET https://registry.npmjs.org/a0-angular-storage
+27 http 404 https://registry.npmjs.org/a0-angular-storage
+28 verbose headers { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+28 verbose headers   'content-type': 'application/json',
+28 verbose headers   'cache-control': 'max-age=0',
+28 verbose headers   'content-length': '51',
+28 verbose headers   'accept-ranges': 'bytes',
+28 verbose headers   date: 'Sat, 01 Aug 2015 05:35:45 GMT',
+28 verbose headers   via: '1.1 varnish',
+28 verbose headers   age: '0',
+28 verbose headers   connection: 'keep-alive',
+28 verbose headers   'x-served-by': 'cache-iad2129-IAD',
+28 verbose headers   'x-cache': 'MISS',
+28 verbose headers   'x-cache-hits': '0',
+28 verbose headers   'x-timer': 'S1438407345.304456,VS0,VE371' }
+29 silly get cb [ 404,
+29 silly get   { server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+29 silly get     'content-type': 'application/json',
+29 silly get     'cache-control': 'max-age=0',
+29 silly get     'content-length': '51',
+29 silly get     'accept-ranges': 'bytes',
+29 silly get     date: 'Sat, 01 Aug 2015 05:35:45 GMT',
+29 silly get     via: '1.1 varnish',
+29 silly get     age: '0',
+29 silly get     connection: 'keep-alive',
+29 silly get     'x-served-by': 'cache-iad2129-IAD',
+29 silly get     'x-cache': 'MISS',
+29 silly get     'x-cache-hits': '0',
+29 silly get     'x-timer': 'S1438407345.304456,VS0,VE371' } ]
+30 verbose stack Error: 404 Not Found: a0-angular-storage
+30 verbose stack     at CachingRegistryClient.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:245:14)
+30 verbose stack     at Request._callback (/usr/local/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:170:14)
+30 verbose stack     at Request.self.callback (/usr/local/lib/node_modules/npm/node_modules/request/request.js:354:22)
+30 verbose stack     at Request.emit (events.js:110:17)
+30 verbose stack     at Request.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1207:14)
+30 verbose stack     at Request.emit (events.js:129:20)
+30 verbose stack     at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/npm/node_modules/request/request.js:1153:12)
+30 verbose stack     at IncomingMessage.emit (events.js:129:20)
+30 verbose stack     at _stream_readable.js:908:16
+30 verbose stack     at process._tickCallback (node.js:355:11)
+31 verbose statusCode 404
+32 verbose pkgid a0-angular-storage
+33 verbose cwd /Users/Vanze/mealcarrier_mobile/www/lib
+34 error Darwin 14.4.0
+35 error argv "node" "/usr/local/bin/npm" "install" "a0-angular-storage"
+36 error node v0.12.5
+37 error npm  v2.11.2
+38 error code E404
+39 error 404 Not Found: a0-angular-storage
+39 error 404
+39 error 404 'a0-angular-storage' is not in the npm registry.
+39 error 404 You should bug the author to publish it (or use the name yourself!)
+39 error 404 It was specified as a dependency of 'mealcarrier'
+39 error 404
+39 error 404 Note that you can also install from a
+39 error 404 tarball, folder, http url, or git url.
+40 verbose exit [ 1, true ]

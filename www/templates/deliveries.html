@@ -1,7 +1,16 @@
-<ion-view view-title="Deliveries" ng-init="pull_database()">
+<ion-view view-title="Deliveries" ng-init="pull_requests()">
   <ion-content>
-    <div ng-repeat="delivery in deliveries">
-      DELIVERY
-    </div>
+    <ion-list ng-repeat="request in requests">
+      <a href="#/request_details/{{request._id}}" class="item">
+      	<h3>
+	  	  {{request.dropoff_location[0]}}
+	  	  {{request.dropoff_location[1]}}
+  	  	</h3>
+      </a>
+    </ion-list>
+    <button ng-click="pull_requests()">
+	  Update
+	</button>
   </ion-content>
 </ion-view>
+
