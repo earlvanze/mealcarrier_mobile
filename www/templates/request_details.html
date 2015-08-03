@@ -14,11 +14,17 @@
     {{position.latitude}}, {{position.longitude}}
 
     <div class="list">
-      <label class="item item-input item-stacked-label">
-	<span class="input-label">
-	  Delivery Notes
-	</span>
-    {{request.delivery_notes}}
+      <label class="item">
+        <span class="label">
+          Pick up from
+        </span>
+          {{request.restaurant_id}}
+      </label>
+      <label class="item">
+      	<span class="label">
+      	  Delivery Notes:
+      	</span>
+          {{request.delivery_notes}}
       </label>
     </div>
     <div style="text-align: center">

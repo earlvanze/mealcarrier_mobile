@@ -15,6 +15,7 @@ angular.module("mealcarrier",
 // configure auth0 by calling the init method of the `authProvider
 .config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider,
   jwtInterceptorProvider) {
+    // auth0 stuff
     // authProvider.init({
     //   domain: 'earlco.auth0.com',
     //   clientID: 'MT44T1spfOV6kqlVOBLHQ0ounqwN61dU',
