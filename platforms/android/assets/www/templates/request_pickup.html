@@ -1,0 +1,16 @@
+<ion-view view-title="Request Pickup">
+  <ion-content>
+
+    <ion-list ng-repeat="restaurant in restaurants">
+      <a href="#/delivery_details/{{restaurant._id}}" class="item">
+	<h3>
+	  {{restaurant.name}}
+	</h3>
+	{{restaurant.address}}
+      </a>
+    </ion-list>
+    <button ng-click="try_updating()">
+      Update
+      </button>
+  </ion-content>
+</ion-view>

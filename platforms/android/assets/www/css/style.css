@@ -1,0 +1,7 @@
+/* Empty. Add your own CSS if you like */
+.form-validate.ng-invalid {
+    border: 3px solid #cc2511;
+}
+.form-validate.ng-valid {
+    border: none;
+}

@@ -1,0 +1,50 @@
+<ion-view view-title="Register">
+<ion-content>
+<div class="list list-inset">
+  <form name="loginForm" novalidate>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">
+      First
+    </span>
+    <input type="text" ng-model="user.first_name" required form-validate-after>
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">
+      Last
+    </span>
+    <input type="text" ng-model="user.last_name" required form-validate-after>
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">
+      Email
+    </span>
+    <input type="text" ng-model="user.email" required form-validate-after>
+  </label>
+  <label class="item item-input item-stacked-label">
+    <span class="input-label">
+      Password
+    </span>
+    <input type="password" ng-model="user.password" required form-validate-after>
+  </label>
+  <label class="item item-input item-stacked-label">
+  <span class="input-label">
+    Confirm Password
+  </span>
+  <input type="password" ng-model="user.confirm_password" required form-validate-after>
+  </label>
+<!--   <div class="registrationFormAlert" id="divCheckPasswordMatch">
+  </div> -->
+  </form>
+</div>
+
+
+<div style="text-align: center">
+  <button class="button button-positive"
+  ng-click="register()">
+    Register
+  </button>
+</div>
+
+
+</ion-content>
+</ion-view>

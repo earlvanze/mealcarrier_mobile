@@ -1,0 +1,34 @@
+<ion-view view-title="Login">
+<ion-content>
+<div class="list list-inset">
+  <label class="item item-input item-stacked-label">
+   <span class="input-label">
+     Email
+   </span>
+   <input type="text" ng-model="credentials.email">
+ </label>
+ <label class="item item-input item-stacked-label">
+   <span class="input-label">
+     Password
+   </span>
+   <input type="password" ng-model="credentials.password">
+ </label>
+</div>
+
+
+<div style="text-align: center">
+  <button class="button button-positive"
+  ng-click="authenticate()">
+  Submit
+</button>
+</div>
+
+<h3
+style="margin-top: 30vh; text-align: center"
+ui-sref="register">
+Register
+</h3>
+
+
+</ion-content>
+</ion-view>

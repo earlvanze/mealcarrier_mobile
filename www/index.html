@@ -15,8 +15,6 @@
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
-    <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDDE09q45122633N8OC1aoD6kXj56u5vHg&sensor=true"></script>
-
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
@@ -42,9 +40,7 @@
 
 
     <ion-side-menus ng-controller="menu_controller">
-    
-      
-      <ion-side-menu side="left">
+      <ion-side-menu side="left" id="side_menu">
 
 	<ion-header-bar class="bar-assertive">
           <h1 class="title">Left Menu</h1>
