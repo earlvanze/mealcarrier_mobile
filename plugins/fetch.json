@@ -1,9 +1,8 @@
 {
     "cordova-plugin-whitelist": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/apache/cordova-plugin-whitelist.git",
-            "subdir": "."
+            "type": "registry",
+            "id": "cordova-plugin-whitelist@1.0.0"
         },
         "is_top_level": true,
         "variables": {}
@@ -41,7 +40,18 @@
         },
         "is_top_level": true,
         "variables": {
-            "API_KEY_FOR_ANDROID": "AIzaSyC-XQv1u0GwSxFgjXt2WuaSZdexrSqyMf0"
+            "API_KEY_FOR_ANDROID": "AIzaSyC-XQv1u0GwSxFgjXt2WuaSZdexrSqyMf0",
+            "API_KEY_FOR_IOS": "AIzaSyDmBX-wPrFQXNS1IUQH8Y78S0KsezU5-Nk"
         }
+    },
+    "com.googlemaps.ios": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/wf9a5m75/googlemaps-ios-sdk-for-phonegap",
+            "subdir": ".",
+            "ref": "master"
+        },
+        "is_top_level": false,
+        "variables": {}
     }
 }

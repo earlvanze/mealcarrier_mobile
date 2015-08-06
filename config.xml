@@ -2,10 +2,10 @@
 <widget id="com.ionicframework.mealcarrier822991" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>mealcarrier</name>
   <description>
-        An Ionic Framework and Cordova project.
+        Meal Carrier is a peer-to-peer food delivery application.
     </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+  <author email="nucleus@mealcarrier.com" href="http://mealcarrier.com/">
+      Meal Carrier Team
     </author>
   <content src="index.html"/>
   <access origin="*"/>
@@ -22,6 +22,9 @@
   <feature name="InAppBrowser">
       <param name="ios-package" value="CDVInAppBrowser" />
       <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
+  </feature>
+  <feature name="GoogleMaps">
+      <param name="ios-package" value="GoogleMaps" />
   </feature>
   <platform name="ios">
     <icon src="resources/ios/icon/icon.png" width="57" height="57"/>

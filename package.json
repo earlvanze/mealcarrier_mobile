@@ -1,7 +1,7 @@
 {
   "name": "mealcarrier",
   "version": "1.0.0",
-  "description": "mealcarrier: An Ionic project",
+  "description": "Meal Carrier is a peer-to-peer delivery platform.",
   "dependencies": {
     "auth0-lock": "https://github.com/auth0/lock/archive/v7.5.4.tar.gz",
     "gulp": "^3.5.6",
