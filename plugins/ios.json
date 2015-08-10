@@ -1,0 +1,174 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "framework": {
+                "parents": {
+                    "AVFoundation.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "CoreData.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "CoreLocation.framework": [
+                        {
+                            "xml": false,
+                            "count": 2
+                        }
+                    ],
+                    "CoreText.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "GLKit.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "ImageIO.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libc++.dylib": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libicucore.dylib": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "libz.dylib": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "OpenGLES.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "QuartzCore.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ],
+                    "SystemConfiguration.framework": [
+                        {
+                            "xml": false,
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Geolocation\"><param name=\"ios-package\" value=\"CDVLocation\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"HttpRequest\"><param name=\"ios-package\" value=\"HttpRequest\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"GoogleMaps\"><param name=\"ios-package\" value=\"GoogleMaps\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"External\"><param name=\"ios-package\" value=\"External\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Geocoder\"><param name=\"ios-package\" value=\"Geocoder\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "*-Info.plist": {
+                "parents": {
+                    "NSLocationWhenInUseUsageDescription": [
+                        {
+                            "xml": "<string />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<string>Show your location on the map</string>",
+                            "count": 1
+                        }
+                    ],
+                    "Google Maps API Key": [
+                        {
+                            "xml": "<string>AIzaSyDmBX-wPrFQXNS1IUQH8Y78S0KsezU5-Nk</string>",
+                            "count": 1
+                        }
+                    ],
+                    "NSLocationAlwaysUsageDescription": [
+                        {
+                            "xml": "<string>Trace your location on the map</string>",
+                            "count": 2
+                        }
+                    ],
+                    "CFBundleURLTypes": [
+                        {
+                            "xml": "<array><dict><key>CFBundleTypeRole</key><string>Editor</string><key>CFBundleURLName</key><string>com.ionicframework.mealcarrier822991</string><key>CFBundleURLSchemes</key><array><string>com.ionicframework.mealcarrier822991</string></array></dict></array>",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "com.google.playservices": {
+            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
+        },
+        "com.googlemaps.ios": {
+            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
+        },
+        "org.apache.cordova.device": {
+            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
+        },
+        "plugin.google.maps": {
+            "API_KEY_FOR_IOS": "AIzaSyDmBX-wPrFQXNS1IUQH8Y78S0KsezU5-Nk",
+            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
+        }
+    },
+    "dependent_plugins": {
+        "plugin.http.request": {
+            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
+        }
+    }
+}
