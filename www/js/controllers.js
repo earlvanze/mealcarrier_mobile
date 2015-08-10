@@ -130,44 +130,76 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 
 .controller("delivery_details_controller", function($scope, $stateParams, $http, store, $state){
 	document.getElementById("side_menu").style.visibility = "hidden";
+
 	var map;
-	var location;
-	document.addEventListener("deviceready", function(){
-	    map = plugin.google.maps.Map.getMap(document.getElementById("map"));
-	    map.on("plugin.google.maps.event.MAP_READY", map_ready)
+	document.addEventListener("deviceready", function() {
+	    var div = document.getElementById("map_canvas");
+	    map = plugin.google.maps.Map.getMap(div);
 	}, false);
+	map = plugin.google.maps.Map.getMap(div);
+	map.clear();
+	var success = function(location) {
+	    console.log('success');
+	    map.addMarker({
+	            'position': location.latLng,
+	            'title': "I am here!"
+	        },
+	        function(marker) {
+	            map.animateCamera({
+	                    'target': location.latLng,
+	                    'zoom': 18
+	                },
+	                function() {
+	                    marker.showInfoWindow();
+	                });
+	        });
+	};
+	var error = function(result) {
+	    console.log('err');;
+	    alert("ERROR\n---\n" + result.error_message);
+	};
+	map.getMyLocation({
+	    enableHighAccuracy: true
+	}, success, error);
+	// var map;
+	// var location;
+	// document.addEventListener("deviceready", function(){
+	//     map = plugin.google.maps.Map.getMap(document.getElementById("map_canvas"));
+	//     console.log(map)
+	//     map.on("plugin.google.maps.event.MAP_READY", map_ready)
+	// }, false);
 	
-    function map_ready(map, location){
-		// do something
-		alert("map is ready");
-		console.log("map is ready");
-		console.log("getting location");
-		location = map.getMyLocation(onSuccess, onError);
-		map.setCenter(location.LatLng);
-    }
+ //    function map_ready(map, location){
+	// 	// do something
+	// 	alert("map is ready");
+	// 	console.log("map is ready");
+	// 	console.log("getting location");
+	// 	location = map.getMyLocation(onSuccess, onError);
+	// 	map.setCenter(location.latLng);
+ //    }
 
-    var onSuccess = function(location) {
-		var msg = ["Current your location:\n",
-		"latitude:" + location.latLng.lat,
-		"longitude:" + location.latLng.lng,
-		"speed:" + location.speed,
-		"time:" + location.time,
-		"bearing:" + location.bearing].join("\n");
+ //    var onSuccess = function(location) {
+	// 	var msg = ["Current your location:\n",
+	// 	"latitude:" + location.latLng.lat,
+	// 	"longitude:" + location.latLng.lng,
+	// 	"speed:" + location.speed,
+	// 	"time:" + location.time,
+	// 	"bearing:" + location.bearing].join("\n");
 
-		map.addMarker({
-			'position': location.latLng,
-			'title': msg
-		}, function(marker) {
-			marker.showInfoWindow();
-		});
-	};
+	// 	map.addMarker({
+	// 		'position': location.latLng,
+	// 		'title': msg
+	// 	}, function(marker) {
+	// 		marker.showInfoWindow();
+	// 	});
+	// };
 
-	var onError = function(msg) {
-		alert("error: " + msg);
-	};
+	// var onError = function(msg) {
+	// 	alert("error: " + msg);
+	// };
 	// console.log("getting location");
 	// map.getMyLocation(onSuccess, onError);
-	// map.setCenter(location.LatLng);
+	// map.setCenter(location.latLng);
 	
     /*
     var myLatlng = new google.maps.LatLng($scope.latitude, $scope.longitude);
