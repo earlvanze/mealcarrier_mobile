@@ -8,18 +8,6 @@
     <feature name="Device">
         <param name="android-package" value="org.apache.cordova.device.Device" />
     </feature>
-    <feature name="HttpRequest">
-        <param name="android-package" value="plugin.http.request.HttpRequest" />
-    </feature>
-    <feature name="GoogleMaps">
-        <param name="android-package" value="plugin.google.maps.GoogleMaps" />
-    </feature>
-    <feature name="External">
-        <param name="android-package" value="plugin.google.maps.External" />
-    </feature>
-    <feature name="Geocoder">
-        <param name="android-package" value="plugin.google.maps.MyGeocoder" />
-    </feature>
     <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
     <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
     <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
@@ -40,10 +28,10 @@
     <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
     <name>mealcarrier</name>
     <description>
-        An Ionic Framework and Cordova project.
+        Meal Carrier is a peer-to-peer food delivery application.
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+    <author email="nucleus@mealcarrier.com" href="http://mealcarrier.com/">
+      Meal Carrier Team
     </author>
     <content src="index.html" />
     <access origin="*" />

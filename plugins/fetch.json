@@ -15,16 +15,6 @@
         "is_top_level": false,
         "variables": {}
     },
-    "com.google.playservices": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/wf9a5m75/google-play-services",
-            "subdir": ".",
-            "ref": "v23"
-        },
-        "is_top_level": false,
-        "variables": {}
-    },
     "org.apache.cordova.device": {
         "source": {
             "type": "registry",
@@ -32,17 +22,6 @@
         },
         "is_top_level": true,
         "variables": {}
-    },
-    "plugin.google.maps": {
-        "source": {
-            "type": "registry",
-            "id": "plugin.google.maps"
-        },
-        "is_top_level": true,
-        "variables": {
-            "API_KEY_FOR_ANDROID": "AIzaSyC-XQv1u0GwSxFgjXt2WuaSZdexrSqyMf0",
-            "API_KEY_FOR_IOS": "AIzaSyDmBX-wPrFQXNS1IUQH8Y78S0KsezU5-Nk"
-        }
     },
     "com.googlemaps.ios": {
         "source": {

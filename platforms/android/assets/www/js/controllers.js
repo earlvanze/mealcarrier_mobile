@@ -102,53 +102,35 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	}
 })
 
-    .controller("request_controller", function($scope, $q, Restaurants, store){
-	alert(store.get("token"));
-    var promise = Restaurants.get_all();
-    promise.then(
-	function($restaurants){
-	    $scope.restaurants = $restaurants;
-	},
-	function(error){
-	    console.log("Error: " + error);
+.controller("request_controller", function($scope, $q, Restaurants){
+	var promise = Restaurants.get_all();
+	promise.then(
+	    function($restaurants){
+		$scope.restaurants = $restaurants;
+	    },
+	    function(error){
+		console.log("Error: " + error);
+	    }
+	);
+	
+	$scope.try_updating = function(){
+	    var promise = Restaurants.get_all();
+	    promise.then(
+		function($restaurants){
+		    $scope.restaurants = $restaurants;
+		},
+		function(error){
+		    console.log("Error: " + error);
+		}
+	    );
 	}
-    );
-    
-    $scope.try_updating = function(){
-		var promise = Restaurants.get_all();
-		promise.then(
-		    function($restaurants){
-			$scope.restaurants = $restaurants;
-		    },
-		    function(error){
-			console.log("Error: " + error);
-		    }
-		);
-    }
-    $scope.today = Date.now;
+	$scope.today = Date.now;
 })
 
 
-    .controller("delivery_details_controller", function($scope, $stateParams, $http, store, $state){
-    document.getElementById("side_menu").style.visibility = "hidden";
-    var map;
-    document.addEventListener("deviceready", function(){
-	map = plugin.google.maps.Map.getMap(document.getElementById("map"));
-	map.addEventListener("plugin.google.maps.event.MAP_READY", map_ready)
-    }, false);
-
-    function map_ready(){
-	// do something
-    }
-
-    latitude = 40.6944;
-    longitude = -73.9861;
-    $scope.request = {};
-    $scope.request.latitude = latitude;
-    $scope.request.longitude = longitude;
+.controller("delivery_details_controller", function($scope, $stateParams, $http, store, $state){
 
 
-    /*
     var myLatlng = new google.maps.LatLng($scope.latitude, $scope.longitude);
     
     var mapOptions = {
@@ -157,19 +139,20 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     
-    var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
     var marker = null;
-
-
+    
     navigator.geolocation.getCurrentPosition(function(pos) {
 	map.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude));
 	
         marker = new google.maps.Marker({
 	    position: new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude),
 	    map: map,
-	    draggable: true
+	    draggable: true,
+	    visible: true
         });
 	marker.setMap(map);
+	alert(marker.getMap().center);
 	google.maps.event.addListener(marker, "dragend", function(){
 	    $scope.request.latitude = marker.getPosition().lat();
 	    $scope.request.longitude = marker.getPosition().lng();
@@ -184,15 +167,17 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	            marker.setPosition({lat: pos.coords.latitude, lng: pos.coords.longitude});	    
 		});
     };
-    */
+
+    $scope.request = {};
+
     $scope.send_request = function(){
 		$http({
 		    url: "http://mealcarrier.com:8080/requests/create",
 		    method: "POST",
 		    data: {
 			user_id: store.get('user_id'),
-			dropoff_latitude: 0,//marker.getPosition().lat(),
-			dropoff_longitude: 0,//marker.getPosition().lng(),
+			dropoff_latitude: location.latLng.lat,		//marker.getPosition().lat(),
+			dropoff_longitude: location.latLng.lng,		//marker.getPosition().lng(),
 			pickup_latitude: 0,
 			pickup_longitude: 0,
 			restaurant_id: $stateParams.restaurant_id,
@@ -209,6 +194,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    //error
 		});
 	alert("outside");
+	console.log("all done with request")
     }
 })
 
