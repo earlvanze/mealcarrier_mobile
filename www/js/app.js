@@ -183,6 +183,6 @@ angular.module("mealcarrier",
       // templateUrl: "templates/deliveries.html"
     })
     ;
-    $urlRouterProvider.otherwise("/login");
+    $urlRouterProvider.otherwise("/request_pickup");
     // $urlRouterProvider.otherwise("/request_pickup");
 });
