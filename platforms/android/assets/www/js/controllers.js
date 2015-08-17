@@ -1,4 +1,4 @@
-angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.formValidateAfter"])
+angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.formValidateAfter", "uiGmapgoogle-maps"])
 
 .controller("menu_controller", function($scope, $ionicSideMenuDelegate, $state){
 
@@ -128,9 +128,82 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 })
 
 
-.controller("delivery_details_controller", function($scope, $stateParams, $http, store, $state){
+    .controller("delivery_details_controller", function($scope, $stateParams, $http, store, $state, uiGmapGoogleMapApi){
+
+	$scope.request = {};
+	
+	navigator.geolocation.getCurrentPosition(function($position){
+	    // success!
+	    setup_map($position.coords.latitude, $position.coords.longitude);
+	}, function($error){
+	    setup_map({latitude: 0, longitude: 0});
+	    // error!
+	});
+
+	var events = {
+	    places_changed: function (searchBox) {}
+	}
+	$scope.searchbox = { template:'templates/searchbox.html', events: events};
+
+	var geocoder;	
+	var setup_map = function($latitude, $longitude){
+	    uiGmapGoogleMapApi.then(function(maps) {
+		geocoder = new google.maps.Geocoder;
+		$scope.map = {center: {latitude: $latitude, longitude: $longitude}, zoom: 16};
+		$scope.marker = {coords: {latitude: $latitude, longitude: $longitude},
+				 id: "me",
+				 options: {draggable: true},
+				 events: {
+				     dragend: function(map, eventname, eventargs){
+					 update_geocode();
+				     }
+				 }
+				};
+		update_geocode();
+	    });
+	}
+
+	var update_geocode = function(){
+	    geocoder.geocode({"location": {lat: $scope.marker.coords.latitude, lng: $scope.marker.coords.longitude}}, function(results, $status){
+		if($status == "OK"){
+		    $scope.marker.pretty_address = results[0].formatted_address;
+		}else{
+		    $scope.marker.pretty_address = $status;
+		}
+		$scope.$apply();
+	    });
+	}
 
 
+	$scope.submit = function(){
+	    $http({
+		url: "http://mealcarrier.com:8080/requests/create",
+		method: "POST",
+		data: {
+		    user_id: store.get('user_id'),
+		    dropoff_latitude: $scope.marker.coords.latitude,
+		    dropoff_longitude: $scope.marker.coords.longitude,
+		    pickup_latitude: 0,
+		    pickup_longitude: 0,
+		    restaurant_id: $stateParams.restaurant_id,
+		    delivery_notes: $scope.request.delivery_notes
+		}
+	    })
+		.then(function($response){
+		    //success
+		    console.log($response);
+		    $state.go('deliveries');
+		}, function($response){
+		    alert("error");
+		    console.log("Error: Could not submit request.");
+		    //error
+		});
+	    console.log("all done with request")
+	}
+	
+	
+	return;
+	
     var myLatlng = new google.maps.LatLng($scope.latitude, $scope.longitude);
     
     var mapOptions = {
@@ -170,32 +243,6 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 
     $scope.request = {};
 
-    $scope.send_request = function(){
-		$http({
-		    url: "http://mealcarrier.com:8080/requests/create",
-		    method: "POST",
-		    data: {
-			user_id: store.get('user_id'),
-			dropoff_latitude: location.latLng.lat,		//marker.getPosition().lat(),
-			dropoff_longitude: location.latLng.lng,		//marker.getPosition().lng(),
-			pickup_latitude: 0,
-			pickup_longitude: 0,
-			restaurant_id: $stateParams.restaurant_id,
-			delivery_notes: $scope.request.delivery_notes
-		    }
-		})
-		.then(function($response){
-		    //success
-		    console.log($response);
-		    $state.go('deliveries');
-		}, function($response){
-		    alert("error");
-		    console.log("Error: Could not submit request.");
-		    //error
-		});
-	alert("outside");
-	console.log("all done with request")
-    }
 })
 
 .controller("deliveries_controller", function($scope, $http, $state, store){

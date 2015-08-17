@@ -1,14 +1,19 @@
 <ion-view view-title="Delivery Details" ng-init="init_marker()">
   <ion-content>
-    <h1>
-      Delivery Details
-    </h1>
-
-    <ui-gmap-google-map center='map.center' zoom='map.zoom'></ui-gmap-google-map>
+    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true">
+      <ui-gmap-marker coords="marker.coords"
+		      idKey="marker.id"
+		      options="marker.options"
+		      events="marker.events"
+		      ></ui-gmap-marker>
+    </ui-gmap-google-map>
 
     <!-- {{position.latitude}}, {{position.longitude}} -->
 
     <div class="list">
+      <label class="item item-input">
+	<input type="text" ng-model="marker.pretty_address">
+      </label>
       <label class="item item-input item-stacked-label">
 	<span class="input-label">
 	  Delivery Notes
@@ -17,14 +22,11 @@
       </label>
     </div>
     <div style="text-align: center">
-      <button
-	 class="button button-positive"
-	 ng-click="center_on_me()"
-	 >
-	My Current Location
+      <button class="button button-positive" ng-click="submit()">
+	Submit
       </button>
-      <button class="button button-positive" ng-click="send_request()">
-	Confirm
+      <button class="button button-positive" ng-click="geocode()">
+	Geocode
       </button>
     </div>
   </ion-content>

@@ -5,3 +5,5 @@
 .form-validate.ng-valid {
     border: none;
 }
+
+.angular-google-map-container { height: 400px; }
