@@ -13,8 +13,12 @@ angular.module("mealcarrier",
 
 // http://ionicframework.com.br/blog/authentication-in-ionic/
 // configure auth0 by calling the init method of the `authProvider
-.config(function($stateProvider, $urlRouterProvider, authProvider, $httpProvider,
-  jwtInterceptorProvider) {
+    .config(function($stateProvider,
+		     $urlRouterProvider,
+		     authProvider,
+		     $httpProvider,
+		     jwtInterceptorProvider,
+		     uiGmapGoogleMapApiProvider) {
     // auth0 stuff
     // authProvider.init({
     //   domain: 'earlco.auth0.com',
@@ -56,7 +60,13 @@ angular.module("mealcarrier",
       }
     }
 
-    $httpProvider.interceptors.push('jwtInterceptor');
+	$httpProvider.interceptors.push('jwtInterceptor');
+
+	uiGmapGoogleMapApiProvider.configure({
+	    key: "AIzaSyDDE09q45122633N8OC1aoD6kXj56u5vHg",
+	    v: '3.17',
+	    libraries: "places"
+	});
 })
 
 .config(['$httpProvider', function($httpProvider) {
@@ -171,6 +181,9 @@ angular.module("mealcarrier",
       // templateUrl: "templates/deliveries.html"
     })
     ;
-    $urlRouterProvider.otherwise("/login");
+    $urlRouterProvider.otherwise("/request_pickup");
     // $urlRouterProvider.otherwise("/request_pickup");
-});
+})
+
+
+;

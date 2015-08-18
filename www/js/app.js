@@ -62,12 +62,10 @@ angular.module("mealcarrier",
 
 	$httpProvider.interceptors.push('jwtInterceptor');
 
-
-
 	uiGmapGoogleMapApiProvider.configure({
 	    key: "AIzaSyDDE09q45122633N8OC1aoD6kXj56u5vHg",
 	    v: '3.17',
-	    libraries: 'weather,geometry,visualization'
+	    libraries: "places"
 	});
 })
 
@@ -190,4 +188,7 @@ angular.module("mealcarrier",
     ;
     $urlRouterProvider.otherwise("/request_pickup");
     // $urlRouterProvider.otherwise("/request_pickup");
-});
+})
+
+
+;
