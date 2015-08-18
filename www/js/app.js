@@ -172,6 +172,11 @@ angular.module("mealcarrier",
         requiresLogin: true
       }
     })
+    .state("payment", {
+      url: "/payment",
+      controller: "payment_controller",
+      templateUrl: "templates/payment.html"
+    })
     .state("chat", {
       url: "/chat",
       // controller: "chat_controller",
