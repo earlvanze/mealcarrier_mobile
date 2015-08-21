@@ -5,8 +5,6 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
-
-    
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
@@ -43,10 +41,10 @@
     <!-- Braintree -->
     <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   
-  <body ng-app="mealcarrier" ng-cloak>
+  <body ng-app="mealcarrier" ng-cloak="">
 
     <ion-side-menus ng-controller="menu_controller">
       <ion-side-menu side="left" id="side_menu">
@@ -57,19 +55,19 @@
 	<ion-content>
 
 	  <ion-list>
-      <ion-item ui-sref="login" menu-close>
+      <ion-item ui-sref="login" menu-close="">
         Login
       </ion-item>
-	    <ion-item ui-sref="request_pickup" menu-close>
+	    <ion-item ui-sref="request_pickup" menu-close="">
 	      Request Pickup
 	    </ion-item>
-	    <ion-item ui-sref="deliveries" menu-close>
+	    <ion-item ui-sref="deliveries" menu-close="">
 	      Deliveries
 	    </ion-item>
-	  <ion-item ui-sref="chat" menu-close>
-	    Chat
+	  <ion-item ui-sref="messaging" menu-close="">
+	    Messaging
 	  </ion-item>
-	  <ion-item ui-sref="account" menu-close>
+	  <ion-item ui-sref="account" menu-close="">
 	    Account
 	  </ion-item>
 	  </ion-list>

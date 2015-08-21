@@ -76,6 +76,46 @@ angular.module("mealcarrier",
    delete $httpProvider.defaults.headers.common['X-Requested-With'];
 }])
 
+// All this does is allow the message
+// to be sent when you tap return
+.directive('input', function($timeout) {
+  return {
+    restrict: 'E',
+    scope: {
+      'returnClose': '=',
+      'onReturn': '&',
+      'onFocus': '&',
+      'onBlur': '&'
+    },
+    link: function(scope, element, attr) {
+      element.bind('focus', function(e) {
+        if (scope.onFocus) {
+          $timeout(function() {
+            scope.onFocus();
+          });
+        }
+      });
+      element.bind('blur', function(e) {
+        if (scope.onBlur) {
+          $timeout(function() {
+            scope.onBlur();
+          });
+        }
+      });
+      element.bind('keydown', function(e) {
+        if (e.which == 13) {
+          if (scope.returnClose) element[0].blur();
+          if (scope.onReturn) {
+            $timeout(function() {
+              scope.onReturn();
+            });
+          }
+        }
+      });
+    }
+  }
+})
+
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -170,19 +210,24 @@ angular.module("mealcarrier",
         requiresLogin: true
       }
     })
-    .state("payment", {
-      url: "/payment",
-      controller: "payment_controller",
-      templateUrl: "templates/payment.html"
+    .state("checkout", {
+      url: "/checkout",
+      controller: "checkout_controller",
+      templateUrl: "templates/checkout.html"
     })
-    .state("chat", {
-      url: "/chat",
-      // controller: "chat_controller",
-      // templateUrl: "templates/deliveries.html"
+    .state("braintree_payment", {
+      url: "/braintree_payment",
+      controller: "braintree_payment_controller",
+      templateUrl: "templates/braintree_payment.html"
+    })
+    .state("messaging", {
+      url: "/messaging",
+      controller: "messaging_controller",
+      templateUrl: "templates/messaging.html"
     })
     .state("account", {
       url: "/account",
-      // controller: "chat_controller",
+      // controller: "account_controller",
       // templateUrl: "templates/deliveries.html"
     })
     ;

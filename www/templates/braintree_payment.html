@@ -1,0 +1,15 @@
+<ion-view view-title="New Payment Method">
+<ion-content>
+<form id="checkout">
+  <div id="payment-form"></div>
+  <div style="text-align: center" ng-show="show_button">
+  <a ui-sref="deliveries" ui-sref-opts="{inherit: false}">
+    <button class="button button-positive"
+    ng-click="confirm()">
+      Pay $2
+    </button>
+  </a>
+</div>
+</form>
+</ion-content>
+</ion-view>

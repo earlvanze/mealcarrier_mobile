@@ -24,10 +24,11 @@ angular.module("mealcarrier.services", [])
     };
 
     return {
-	get_all: function(){
-	    var $deferred = $q.defer();
-	    update_all($deferred);
-	    return $deferred.promise;
-	}
+		get_all: function(){
+		    var $deferred = $q.defer();
+		    update_all($deferred);
+		    return $deferred.promise;
+		}
     }
+    
 }]);
