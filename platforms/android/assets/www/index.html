@@ -39,9 +39,14 @@
 
     <!-- angular-jwt -->
     <script src="lib/angular-jwt/dist/angular-jwt.js"></script>
-  </head>
-  <body ng-app="mealcarrier" ng-cloak class="platform-android platform-cordova platform-webview">
 
+    <!-- Braintree -->
+    <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  
+  <body ng-app="mealcarrier" ng-cloak="" class="platform-android platform-cordova platform-webview">
 
     <ion-side-menus ng-controller="menu_controller">
       <ion-side-menu side="left" id="side_menu">
@@ -52,19 +57,19 @@
 	<ion-content>
 
 	  <ion-list>
-      <ion-item ui-sref="login" menu-close>
+      <ion-item ui-sref="login" menu-close="">
         Login
       </ion-item>
-	    <ion-item ui-sref="request_pickup" menu-close>
+	    <ion-item ui-sref="request_pickup" menu-close="">
 	      Request Pickup
 	    </ion-item>
-	    <ion-item ui-sref="deliveries" menu-close>
+	    <ion-item ui-sref="deliveries" menu-close="">
 	      Deliveries
 	    </ion-item>
-	  <ion-item ui-sref="chat" menu-close>
+	  <ion-item ui-sref="chat" menu-close="">
 	    Chat
 	  </ion-item>
-	  <ion-item ui-sref="account" menu-close>
+	  <ion-item ui-sref="account" menu-close="">
 	    Account
 	  </ion-item>
 	  </ion-list>

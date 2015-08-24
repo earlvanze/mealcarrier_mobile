@@ -146,9 +146,6 @@
         }
     },
     "installed_plugins": {
-        "com.google.playservices": {
-            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
-        },
         "com.googlemaps.ios": {
             "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
         },
@@ -160,15 +157,7 @@
         },
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
-        },
-        "plugin.google.maps": {
-            "API_KEY_FOR_IOS": "AIzaSyDmBX-wPrFQXNS1IUQH8Y78S0KsezU5-Nk",
-            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
         }
     },
-    "dependent_plugins": {
-        "plugin.http.request": {
-            "PACKAGE_NAME": "com.ionicframework.mealcarrier822991"
-        }
-    }
+    "dependent_plugins": {}
 }

@@ -1,6 +1,6 @@
 {
   "name": "mealcarrier",
-  "app_id": "",
+  "app_id": "af563583",
   "watchPatterns": [
     "!www/js/.#*",
     "!www/**/.#*",
@@ -9,5 +9,5 @@
     "www/js/[a-zA-Z0-9]*.js",
     "www/*.html",
     "www/**/*.html"
-   ] 
+  ]
 }
