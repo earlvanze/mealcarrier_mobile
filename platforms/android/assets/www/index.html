@@ -5,8 +5,6 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
 
-
-    
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 
@@ -20,13 +18,14 @@
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
 
-    <!-- your app's js -->
-    <script src="js/lodash.min.js"></script>
-    <script src="js/angular-google-maps.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/controllers.js"></script>
-    <script src="js/services.js"></script>
-    <script src="js/form-validate-after.js"></script>
+    <!-- jQuery -->
+    <script src="lib/jquery/jquery.min.js"></script>
+
+    <!-- moment -->
+    <script src="lib/moment/moment.js"></script>
+
+    <!-- angular moment -->
+    <script src="lib/angular-moment/angular-moment.min.js"></script>
 
     <!-- Auth0 Lock -->
     <script src="lib/auth0-lock/build/auth0-lock.js"></script>
@@ -43,13 +42,22 @@
     <!-- Braintree -->
     <script src="https://js.braintreegateway.com/v2/braintree.js"></script>
 
+    <!-- your app's js -->
+    <script src="js/lodash.min.js"></script>
+    <script src="js/angular-google-maps.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/form-validate-after.js"></script>
+    <script src="js/messaging.js"></script>       <!-- Messaging, from http://codepen.io/anon/pen/xGoMoZ -->
+    <script src="js/controllers.js"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   
   <body ng-app="mealcarrier" ng-cloak="" class="platform-android platform-cordova platform-webview">
 
     <ion-side-menus ng-controller="menu_controller">
-      <ion-side-menu side="left" id="side_menu">
+      <ion-side-menu side="left" id="side_menu" expose-aside-when="large">
 
 	<ion-header-bar class="bar-assertive">
           <h1 class="title">Left Menu</h1>
@@ -66,8 +74,8 @@
 	    <ion-item ui-sref="deliveries" menu-close="">
 	      Deliveries
 	    </ion-item>
-	  <ion-item ui-sref="chat" menu-close="">
-	    Chat
+	  <ion-item ui-sref="messaging" menu-close="">
+	    Messaging
 	  </ion-item>
 	  <ion-item ui-sref="account" menu-close="">
 	    Account

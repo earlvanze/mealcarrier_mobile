@@ -1,13 +1,18 @@
 <ion-view view-title="Request Details" ng-init="init_marker()">
   <ion-content>
     <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true">
-      <ui-gmap-marker coords="marker.coords"
-          idKey="marker.id"
-          options="marker.options"
-          events="marker.events"
+      <ui-gmap-markers
+	 models="markers"
+	 coords="'self'"
       ></ui-gmap-marker>
+      <ui-gmap-polyline path="points"
+			fit="true"
+			stroke="stroke"
+			icon="icon">
+      </ui-gmap-polyline>
     </ui-gmap-google-map>
 
+    
     <!-- {{position.latitude}}, {{position.longitude}} -->
 
     <div class="list">

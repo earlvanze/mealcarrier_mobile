@@ -225,7 +225,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     $scope.pull_requests = function(){
     	$http({
 		    method: "GET",
-		    url: "http://mealcarrier.com:8080/requests"
+		    url: "http://mealcarrier.com:8080/requests/active"
 		})
 		.then(function($response){
 		    //success
@@ -240,148 +240,124 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     // $scope.deliveries = [{}, {}];
 })
 
-.controller("request_details_controller", function($scope, $stateParams, $http, store, $state, uiGmapGoogleMapApi, $ionicLoading){
+    .controller("request_details_controller", function($scope, $stateParams, $http, store, $state, uiGmapGoogleMapApi, $ionicLoading, $ionicPopup){
 	// $ionicLoading.show();
 	$scope.request = {};
-	console.log($stateParams.request_id);
+
+	$scope.markers = [];
+
 	$http({
 	    method: "GET",
 	    url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id
 	})
-	.then(function($response){
-	    //success
-	    $scope.request = $response.data;
-	    console.log($scope.request);
-	}, function($response){
-	    console.log($response);
-	    console.log("Error: Can't connect to server or not authorized.");
-	    //error
-	});
-	
+	    .then(function($response){
+		//success
+		$scope.markers[0] = {latitude: $response.data.pickup_location.latitude,
+				     longitude: $response.data.pickup_location.longitude,
+				     id: "pickup"};
+		$scope.request = $response.data;
+	    }, function($response){
+		console.log($response);
+		console.log("Error: Can't connect to server or not authorized.");
+		//error
+	    });
+	// dropoff_location[1] is currently set to latitude, as returned by the server.
+	// dropoff_location[0] is the longitude. This should really be an object instead of an array, or at least the array should be in the right order. The code is consistent throughout the app though.
+
 	navigator.geolocation.getCurrentPosition(function($position){
 	    // success!
 	    setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-		my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-		dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
+	    my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
+	    dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
+	    pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);
+
+
+	    $scope.markers[1] = {
+		latitude: parseFloat($position.coords.latitude),
+		longitude: parseFloat($position.coords.longitude),
+		icon: "/android_asset/www/img/current_location.png",
+		id: "myself"
+	    };
+	    $scope.markers[2] = {
+		latitude: parseFloat($scope.request.dropoff_location[1]),
+		longitude: parseFloat($scope.request.dropoff_location[0]),
+		id: "dropoff"
+
+	    };
+
 	}, function($error){
 	    setup_map({latitude: 0, longitude: 0});
 	    // error!
 	});
-
-	var geocoder;
-	var directionsDisplay;
-    var directionsService;
+	
+	var directionsService;
+	$scope.points = [];
+	$scope.stroke = {
+	    color: "#57068C",
+	    weight: 2
+	};
 	var setup_map = function($latitude, $longitude){
 	    uiGmapGoogleMapApi.then(function(maps) {
-			geocoder = new google.maps.Geocoder;
-			$scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
-			$scope.marker = {coords: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])},
-				id: "dropoff_location",
-				options: {draggable: false},
-				events: {
-				    dragend: function(map, eventname, eventargs){
-						 update_geocode();
-				    }
-				}
-			};
-			// $scope.my_marker = {coords: {latitude: parseFloat($latitude), longitude: parseFloat($longitude)},
-			// 	id: "me",
-			// 	options: {draggable: false},
-			// 	events: {
-			// 	    dragend: function(map, eventname, eventargs){
-			// 			 update_geocode();
-			// 	    }
-			// 	}
-			// };
-		    $scope.directionsService = new google.maps.DirectionsService();
-	        $scope.directionsDisplay = new google.maps.DirectionsRenderer();
-			calcRoute(my_latlng, dropoff_latlng);
-			update_geocode();
-			// $ionicLoading.hide();
-	    });
-	}
-
-	var update_geocode = function(){
-	    geocoder.geocode({"location": {lat: $scope.marker.coords.latitude, lng: $scope.marker.coords.longitude}}, function($results, $status){
-			if($status == "OK"){
-			    $scope.marker.pretty_address = $results[0].formatted_address;
-			}else{
-			    $scope.marker.pretty_address = $status;
-			}
-			$scope.$apply();
-	    });
-	}
-
-	$scope.geocode = function(){
-	    geocoder.geocode({"address": $scope.marker.pretty_address}, function($results, $status){
-		if($status == "ZERO_RESULTS"){
-		    // do something!
-		}
-		if($results.length == 1){
-		    var $new_coords = $results[0].geometry.location;
-		    $scope.marker.coords.latitude = $new_coords.k;
-		    $scope.marker.coords.longitude = $new_coords.D;
-		    $scope.map.center.latitude = $new_coords.k;
-		    $scope.map.center.longitude = $new_coords.D;
-		    $scope.marker.pretty_address = $results[0].formatted_address;
-		    $scope.$apply();
-		}else{
-		    // do something!
-		}
-		
+		$scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
+		$scope.marker = {coords: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])},
+				 id: "dropoff_location",
+				 options: {draggable: false}
+				};
+		directionsService = new google.maps.DirectionsService();
+		calcRoute(my_latlng, pickup_latlng);
+		calcRoute(pickup_latlng, dropoff_latlng);
+		// $ionicLoading.hide();
 	    });
 	}
 
 	var calcRoute = function(start, end) {
-		var request = {
-			origin:start,
-			destination:end,
-			travelMode: google.maps.TravelMode.WALKING
-		};
-		$scope.directionsService.route(request, function(response, status) {
-			if (status == google.maps.DirectionsStatus.OK) {
-				$scope.directionsDisplay.setDirections(response);
-                // $scope.directionsDisplay.setMap($scope.google.maps);
-	            // $scope.directions.showList = true;
-				console.log(response);
-			} else {
-                var alertPopup = $ionicPopup.alert({
-                    title: 'Cannot find address at this location!',
-                    template: 'Please try again!'
-                });
-                alertPopup.then(function (res) {
-                    console.log('Google route unsuccesful! Please try again!');
-                });
-            }
-		});
+	    var request = {
+		origin:start,
+		destination:end,
+		travelMode: google.maps.TravelMode.WALKING
+	    };
+	    directionsService.route(request, function(response, status) {
+		if (status == google.maps.DirectionsStatus.OK) {
+		    $scope.points = $scope.points.concat(response.routes[0].overview_path);
+		} else {
+		    var alertPopup = $ionicPopup.alert({
+			title: 'Cannot find address at this location!',
+			template: 'Please try again!'
+                    });
+                    alertPopup.then(function (res) {
+			// console.log('Google route unsuccesful! Please try again!');
+                    });
+		}
+	    });
 	}
+	
 
 	function getLatLngFromCoords($latitude, $longitude) {
 	    return new google.maps.LatLng(parseFloat($latitude), parseFloat($longitude)); 
 	}
-    
-    $scope.accept_delivery = function(){
-		console.log("Confirming delivery");
-		$http({
-		    url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
-		    method: "PUT",
-		    data: {
-		    	accepted: true,
-		    	carrier_id: store.get('user_id')
-		    }
-		})
+	
+	$scope.accept_delivery = function(){
+	    // console.log("Confirming delivery");
+	    $http({
+		url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
+		method: "PUT",
+		data: {
+		    accepted: true,
+		    carrier_id: store.get('user_id')
+		}
+	    })
 		.then(function($response){
 		    //success
 		    console.log($response);
-		    $state.go('messaging');
+		    //		    $state.go('messaging');
 		}, function($response){
 		    console.log("Error: Could not submit request.");
 		    //error
 		});
-    }
-})
+	}
+    })
 
-.controller("checkout_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods){
+    .controller("checkout_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods){
 	console.log(PaymentMethods.get());
 	$scope.payment_methods = PaymentMethods.get();
 

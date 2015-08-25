@@ -1,4 +1,4 @@
-<ion-view view-title="Open Deliveries" ng-init="pull_requests()">
+<ion-view view-title="Open Deliveries" ng-init="pull_requests()" cache-view="false">
   <ion-content>
     <ion-list ng-repeat="request in requests">
       <a href="#/request_details/{{request._id}}" class="item">
