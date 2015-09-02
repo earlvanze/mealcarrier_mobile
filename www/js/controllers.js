@@ -374,7 +374,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	}
     })
 
-    .controller("checkout_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods){
+    .controller("checkout_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods, $ionicPopup){
 	console.log(PaymentMethods.get());
 	$scope.payment_methods = PaymentMethods.get();
 
@@ -416,13 +416,24 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 			    function(data){
 			    	// success
 					// console.log(data);
+					if (!data.success) {
+					    console.log(data.message);
+					} else {
+					    var alertPopup = $ionicPopup.alert({
+							title: 'Request created!',
+							template: 'We will notify you when someone has accepted to fulfill your request.'
+	                    });
+	                    alertPopup.then(function (res) {
+
+	                    });
+					}
 			    },
 			    function(error){
 			    	// error
 					console.log("Error: " + error);
 			    }
 			);
-		    $state.go('deliveries');
+		    // $state.go('deliveries');
 		}, function($response){
 		    console.log("Error: Could not submit request.");
 		    //error
@@ -471,6 +482,17 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 			    function(data){
 			    	// success
 					// console.log(data);
+					if (!data.success) {
+					    console.log(data.message);
+					} else {
+					    var alertPopup = $ionicPopup.alert({
+							title: 'Request created!',
+							template: 'We will notify you when someone has accepted to fulfill your request.'
+	                    });
+	                    alertPopup.then(function (res) {
+	                    	
+	                    });
+					}
 			    },
 			    function(error){
 			    	// error
