@@ -4,11 +4,12 @@
       <ui-gmap-markers
 	 models="markers"
 	 coords="'self'"
+	 icon="'icon'"
       ></ui-gmap-marker>
       <ui-gmap-polyline path="points"
 			fit="true"
 			stroke="stroke"
-			icon="icon">
+			>
       </ui-gmap-polyline>
     </ui-gmap-google-map>
 
@@ -37,9 +38,6 @@
       </label>
     </div>
     <div style="text-align: center">
-      <button class="button button-positive" ng-click="geocode()">
-        Geocode
-      </button>
       <button class="button button-positive" ng-click="accept_delivery()">
       	Accept Delivery
       </button>

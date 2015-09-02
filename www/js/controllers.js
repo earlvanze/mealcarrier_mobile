@@ -167,6 +167,9 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	    });
 	}
 
+    
+    // still needed?
+    // delete?
 	$scope.geocode = function(){
 	    geocoder.geocode({"address": $scope.marker.pretty_address}, function($results, $status){
 			if($status == "ZERO_RESULTS"){
@@ -225,7 +228,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     $scope.pull_requests = function(){
     	$http({
 		    method: "GET",
-		    url: "http://mealcarrier.com:8080/requests/active"
+		    url: "http://mealcarrier.com:8080/requests/available"
 		})
 		.then(function($response){
 		    //success
@@ -241,55 +244,69 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 })
 
     .controller("request_details_controller", function($scope, $stateParams, $http, store, $state, uiGmapGoogleMapApi, $ionicLoading, $ionicPopup){
+	
 	// $ionicLoading.show();
 	$scope.request = {};
-
-	$scope.markers = [];
-
-	$http({
-	    method: "GET",
-	    url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id
-	})
-	    .then(function($response){
-		//success
-		$scope.markers[0] = {latitude: $response.data.pickup_location.latitude,
-				     longitude: $response.data.pickup_location.longitude,
-				     id: "pickup"};
-		$scope.request = $response.data;
-	    }, function($response){
-		console.log($response);
-		console.log("Error: Can't connect to server or not authorized.");
-		//error
-	    });
-	// dropoff_location[1] is currently set to latitude, as returned by the server.
-	// dropoff_location[0] is the longitude. This should really be an object instead of an array, or at least the array should be in the right order. The code is consistent throughout the app though.
-
-	navigator.geolocation.getCurrentPosition(function($position){
-	    // success!
-	    setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-	    my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-	    dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
-	    pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);
-
-
-	    $scope.markers[1] = {
-		latitude: parseFloat($position.coords.latitude),
-		longitude: parseFloat($position.coords.longitude),
-		icon: "/android_asset/www/img/current_location.png",
-		id: "myself"
-	    };
-	    $scope.markers[2] = {
-		latitude: parseFloat($scope.request.dropoff_location[1]),
-		longitude: parseFloat($scope.request.dropoff_location[0]),
-		id: "dropoff"
-
-	    };
-
-	}, function($error){
-	    setup_map({latitude: 0, longitude: 0});
-	    // error!
-	});
 	
+	$scope.markers = [];
+	
+	
+	uiGmapGoogleMapApi.then(function(maps){
+	    // get details for specific request
+	    $http({
+		method: "GET",
+		url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id
+	    })
+		.then(function($response){
+		    //success
+		    $scope.markers[0] = {latitude: $response.data.pickup_location.latitude,
+					 longitude: $response.data.pickup_location.longitude,
+					 icon: "img/pickup_marker_icon.png",
+					 id: "pickup"};
+		    $scope.request = $response.data;
+
+		    // dropoff_location[1] is currently set to latitude, as returned by the server.
+		    // dropoff_location[0] is the longitude. This should really be an object instead of an array, or at least the array should be in the right order. The code is consistent throughout the app though.
+
+
+		    // try to get current location
+		    navigator.geolocation.getCurrentPosition(function($position){
+			// success!
+
+			my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
+			dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
+			pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);
+
+			setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
+			
+			
+			$scope.markers[1] = {
+			    latitude: parseFloat($position.coords.latitude),
+			    longitude: parseFloat($position.coords.longitude),
+			    icon: "img/current_location_marker_icon.png",
+			    id: "myself"
+			};
+			$scope.markers[2] = {
+			    latitude: parseFloat($scope.request.dropoff_location[1]),
+			    longitude: parseFloat($scope.request.dropoff_location[0]),
+			    icon: "img/dropoff_marker_icon.png",
+			    id: "dropoff"
+			    
+			};
+			
+		    }, function($error){
+			alert($error);
+			console.log($error);
+			// error!
+		    });
+
+		    
+		}, function($response){
+		    //error
+		    console.log($response);
+		    console.log("Error: Can't connect to server or not authorized.");
+		});
+	});
 	var directionsService;
 	$scope.points = [];
 	$scope.stroke = {
@@ -297,18 +314,16 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	    weight: 2
 	};
 	var setup_map = function($latitude, $longitude){
-	    uiGmapGoogleMapApi.then(function(maps) {
-		$scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
-		$scope.marker = {coords: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])},
-				 id: "dropoff_location",
-				 options: {draggable: false}
-				};
-		directionsService = new google.maps.DirectionsService();
-		calcRoute(my_latlng, pickup_latlng);
-		calcRoute(pickup_latlng, dropoff_latlng);
-		// $ionicLoading.hide();
-	    });
-	}
+	    $scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
+	    $scope.marker = {coords: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])},
+			     id: "dropoff_location",
+			     options: {draggable: false}
+			    };
+	    directionsService = new google.maps.DirectionsService();
+	    calcRoute(my_latlng, pickup_latlng);
+	    calcRoute(pickup_latlng, dropoff_latlng);
+	    // $ionicLoading.hide();
+	};
 
 	var calcRoute = function(start, end) {
 	    var request = {
