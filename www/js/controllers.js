@@ -225,7 +225,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     $scope.pull_requests = function(){
     	$http({
 		    method: "GET",
-		    url: "http://mealcarrier.com:8080/requests/active"
+		    url: "http://mealcarrier.com:8080/requests/available"
 		})
 		.then(function($response){
 		    //success
@@ -339,17 +339,19 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	$scope.accept_delivery = function(){
 	    // console.log("Confirming delivery");
 	    $http({
-		url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
-		method: "PUT",
-		data: {
-		    accepted: true,
-		    carrier_id: store.get('user_id')
-		}
+			url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
+			method: "PUT",
+			data: {
+			    accepted: true,
+			    carrier_id: store.get('user_id'),
+			    accepted_time: Date.now()
+			}
 	    })
 		.then(function($response){
 		    //success
 		    console.log($response);
 		    //		    $state.go('messaging');
+		    console.log("delivery accepted");
 		}, function($response){
 		    console.log("Error: Could not submit request.");
 		    //error
