@@ -128,7 +128,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 .controller("delivery_details_controller", function($scope, $stateParams, $http, store, $state, uiGmapGoogleMapApi, $ionicLoading, Request){
 	// $ionicLoading.show();
 	$scope.request = {};
-	
+    $scope.map_ready = false;
+    
 	navigator.geolocation.getCurrentPosition(function($position){
 	    // success!
 	    setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
@@ -151,7 +152,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 						}
 					}
 				};
-			update_geocode();
+		update_geocode();
+		$scope.map_ready = true;
 			// $ionicLoading.hide();
 	    });
 	}

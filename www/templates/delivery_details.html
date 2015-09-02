@@ -1,12 +1,13 @@
 <ion-view view-title="Delivery Details" ng-init="init_marker()">
   <ion-content>
-    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true">
+    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" ng-if="map_ready">
       <ui-gmap-marker coords="marker.coords"
 		      idKey="marker.id"
 		      options="marker.options"
 		      events="marker.events"
 		      ></ui-gmap-marker>
     </ui-gmap-google-map>
+    <ion-spinner ng-if="!map_ready"></ion-spinner>
 
     <!-- {{position.latitude}}, {{position.longitude}} -->
 
