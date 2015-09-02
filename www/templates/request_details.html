@@ -1,6 +1,9 @@
 <ion-view view-title="Request Details" ng-init="init_marker()">
   <ion-content>
-    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true">
+    <ui-gmap-google-map center='map.center'
+			zoom='map.zoom'
+			draggable="true"
+			ng-if="map_ready">
       <ui-gmap-markers
 	 models="markers"
 	 coords="'self'"
@@ -12,6 +15,12 @@
 			>
       </ui-gmap-polyline>
     </ui-gmap-google-map>
+
+    <div class="gmap_loading_spinner_wrapper" ng-if="!map_ready">
+      <ion-spinner class="gmap_loading_spinner"></ion-spinner>
+      <br>
+      loading map
+    </div>
 
     
     <!-- {{position.latitude}}, {{position.longitude}} -->

@@ -249,7 +249,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	
 	// $ionicLoading.show();
 	$scope.request = {};
-	
+	$scope.map_ready = false;
 	$scope.markers = [];
 	
 	
@@ -277,10 +277,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 
 			my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
 			dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
-			pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);
-
-			setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-			
+			pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);			
 			
 			$scope.markers[1] = {
 			    latitude: parseFloat($position.coords.latitude),
@@ -293,8 +290,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 			    longitude: parseFloat($scope.request.dropoff_location[0]),
 			    icon: "img/dropoff_marker_icon.png",
 			    id: "dropoff"
-			    
 			};
+			setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
 			
 		    }, function($error){
 			alert($error);
@@ -317,14 +314,10 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	};
 	var setup_map = function($latitude, $longitude){
 	    $scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
-	    $scope.marker = {coords: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])},
-			     id: "dropoff_location",
-			     options: {draggable: false}
-			    };
 	    directionsService = new google.maps.DirectionsService();
 	    calcRoute(my_latlng, pickup_latlng);
 	    calcRoute(pickup_latlng, dropoff_latlng);
-	    // $ionicLoading.hide();
+	    $scope.map_ready = true;
 	};
 
 	var calcRoute = function(start, end) {
