@@ -58,7 +58,7 @@ angular.module("mealcarrier.services", [])
     	var delivery_notes = '';
 
     	this.set = function(request) {
-	    	var user_id = store.get('user_id');
+	    	user_id = store.get('user_id');
     		dropoff_latitude = request.dropoff_latitude;
 			dropoff_longitude = request.dropoff_longitude;
 		    pickup_latitude = request.pickup_latitude;
