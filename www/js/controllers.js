@@ -516,11 +516,10 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
       console.log('UserMessages $ionicView.enter');
 
       getMessages();
-      
-      $timeout(function() {
-        footerBar = document.body.querySelector('#userMessagesView .bar-footer');
-        scroller = document.body.querySelector('#userMessagesView .scroll-content');
-        txtInput = angular.element(footerBar.querySelector('textarea'));
+	$timeout(function() {
+	    footerBar = angular.element(".bar-footer");
+	    scroller = angular.element("#userMessagesView .scroll-content");
+	    txtInput = angular.element(".bar-footer textarea");
       }, 5000);
 
       messageCheckTimer = $interval(function() {
@@ -551,9 +550,11 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
         $scope.doneLoading = true;
         $scope.messages = data.messages;
 
-        $timeout(function() {
-          viewScroll.scrollBottom();
-        }, 5000);
+	  /*
+            $timeout(function() {
+            viewScroll.scrollBottom();
+            }, 6000);
+	  */
       });
     }
 
