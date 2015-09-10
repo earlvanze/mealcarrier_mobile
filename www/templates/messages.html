@@ -1,0 +1,51 @@
+<style>
+  .message_wrapper{
+  padding: 0.5em;
+  }
+
+  .message_wrapper.from_me{
+  text-align: right;
+  }
+  
+  .message{
+  display: inline-block;
+  padding: 1em;
+  }
+  
+  .message.to_me{
+  background-color: #e6e5eb;
+  }
+  
+  .message.from_me{
+  background-color: #158ffe;
+  color: #fff;
+  }
+</style>
+
+<ion-view>
+  <ion-content class="has-footer">
+    <ion-scroll delegate-handle="messages_scroll">
+    <div class="message_wrapper"
+	 ng-repeat="message in messages"
+	 ng-class="{'from_me': message.from == my_id}">
+      <div class="message"
+	   ng-class="{'to_me': message.to == my_id,
+		     'from_me': message.from == my_id}"
+	   {{message.text}}
+      </div>
+    </div>
+    </ion-scroll>
+  </ion-content>
+  <form ng-submit="send_message()">
+  <div class="bar bar-footer item item-input-inset">
+    <input type="text"
+	   style="background-color: lightgrey; width: 100%"
+	   placeholder="Type ..."
+	   ng-model="new_message"
+	   />
+    <button type="submit">
+      send
+      </button>
+  </div>
+  </form>
+</ion-view>

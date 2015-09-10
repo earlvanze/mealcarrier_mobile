@@ -480,6 +480,74 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	}
 })
 
+
+    .controller("messages_controller", function($scope, $ionicScrollDelegate){
+	var User = {
+	    get: function(string){
+		return 13;
+	    }
+	};
+
+	$scope.my_id = User.get("id");
+	
+	var $messages = [
+	    {
+		to: 13,
+		from: 11,
+		text: "This is a thing"
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "Listen to me"
+	    },
+	    {
+		to: 11,
+		from: 13,
+		text: "Yes. I am excited to work."
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "Blah blah blah blah"
+	    },
+	    {
+		to: 11,
+		from: 13,
+		text: "Tell my why I can't see too far."
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "This text makes no sense"
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "I agree?"
+	    }
+	];
+
+	$scope.send_message = function(){
+	    $scope.messages.push(
+		{
+		    to: 11,
+		    from: 13,
+		    text: $scope.new_message
+		}
+	    );
+	    $scope.new_message = "";
+	    $ionicScrollDelegate.scrollBottom();
+	}
+	
+	
+	$scope.messages = $messages;
+    })
+
+
+
+
+
 .controller('messaging_controller', ['$scope', '$rootScope', '$state',
   '$stateParams', 'MockService', '$ionicActionSheet',
   '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
