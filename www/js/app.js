@@ -83,9 +83,9 @@ angular.module("mealcarrier",
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
-    if(window.cordova && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-    }
+    // if(window.cordova && window.cordova.plugins.Keyboard) {
+    //   cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+    // }
     if(window.StatusBar) {
       StatusBar.styleDefault();
     }
@@ -183,24 +183,20 @@ angular.module("mealcarrier",
       controller: "braintree_payment_controller",
       templateUrl: "templates/braintree_payment.html"
     })
-
-
-        .state("messages", {
+    .state("messages", {
 	    url: "/messages",
 	    controller: "messages_controller",
 	    templateUrl: "templates/messages.html"
-	})
-
-
-	.state("messaging", {
+  	})
+  	.state("messaging", {
       url: "/messaging",
       controller: "messaging_controller",
       templateUrl: "templates/old_messaging.html"
     })
     .state("account", {
       url: "/account",
-      // controller: "account_controller",
-      // templateUrl: "templates/deliveries.html"
+      controller: "account_controller",
+      templateUrl: "templates/account.html"
     })
     ;
     $urlRouterProvider.otherwise("/request_pickup");

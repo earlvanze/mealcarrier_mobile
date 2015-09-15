@@ -5,7 +5,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 })
 
 // .controller("login_controller", function($scope, $http, $state, auth, store, ){
-.controller("login_controller", function($scope, $http, $state, store, jwtHelper){
+.controller("login_controller", function($scope, $http, $state, store, jwtHelper, $ionicPopup){
     $scope.credentials = {};
     $scope.authenticate = function(){
 		$http({
@@ -21,6 +21,13 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    console.log($response);
 		    if (!$response.data.success){
 	    		console.log($response.data.message)
+			    var alertPopup = $ionicPopup.alert({
+					title: 'Unable to Login',
+					template: $response.data.message
+	            });
+	            alertPopup.then(function (res) {
+	            	// What to do after clicking ok?
+	            });
 		    } else {
 		        // Login was successful
 			    // We need to save the information from the login
@@ -85,10 +92,17 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    // console.log($scope.user.token);
 		    if (!$response.data.success){
 		    	console.log($response.data.message)
+			    var alertPopup = $ionicPopup.alert({
+					title: 'Unable to Register',
+					template: $response.data.message
+	            });
+	            alertPopup.then(function (res) {
+	            	// What to do after clicking ok?
+	            });
 		    } else {
 		    	console.log($response.data.message);
 			    $scope.user.token = $response.data.token;
-    		    console.log($scope.user.token);
+    		    console.log($scope.user.tokean);
 		    	$state.go('request_pickup');
 		    }
 		},
@@ -97,6 +111,15 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    console.log("Error: Can't connect to server.");
 		    //error
 		});
+	}
+})
+
+.controller("account_controller", function($scope, $http, $state, store){
+	$scope.logout = function(){
+	    store.remove('credentials');
+	    store.remove('user_id');
+	    store.remove('token');
+	    alert("You are now logged out");
 	}
 })
 
@@ -138,7 +161,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	    // error!
 	});
 
-	var geocoder;	
+	var geocoder;
 	var setup_map = function($latitude, $longitude){
 	    uiGmapGoogleMapApi.then(function(maps) {
 			geocoder = new google.maps.Geocoder;
@@ -170,8 +193,9 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	}
 
     
-    // still needed?
-    // delete?
+    // still needed? YES
+    // delete? NO
+    // Implement as Google Maps getLocation button on map
 	$scope.geocode = function(){
 	    geocoder.geocode({"address": $scope.marker.pretty_address}, function($results, $status){
 			if($status == "ZERO_RESULTS"){
@@ -199,30 +223,11 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		$scope.request.restaurant_id = $stateParams.restaurant_id;
 	    $scope.request.delivery_notes = $scope.request.delivery_notes;
 	    request = Request.set($scope.request);
-		$state.go('checkout');
-	 //    $http({
-		// 	url: "http://mealcarrier.com:8080/requests/create",
-		// 	method: "POST",
-		// 	data: {
-		// 	    user_id: store.get('user_id'),
-		// 	    dropoff_latitude: $scope.marker.coords.latitude,
-		// 	    dropoff_longitude: $scope.marker.coords.longitude,
-		// 	    pickup_latitude: 0,
-		// 	    pickup_longitude: 0,
-		// 	    restaurant_id: $stateParams.restaurant_id,
-		// 	    delivery_notes: $scope.request.delivery_notes
-		// 	}
-	 //    })
-		// .then(function($response){
-		//     //success
-		//     console.log($response);
-		//     $state.go('payment');
-		// }, function($response){
-		//     alert("error");
-		//     console.log("Error: Could not submit request.");
-		//     //error
-		// });
-	 //    console.log("all done with request")
+	    if (store.get('token')) {
+			$state.go('checkout');
+	    } else {
+	    	$state.go('login');
+	    }
 	}
 })
 
@@ -293,7 +298,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 			setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
 			
 		    }, function($error){
-			alert($error);
+				alert($error);
 			console.log($error);
 			// error!
 		    });
@@ -303,6 +308,13 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    //error
 		    console.log($response);
 		    console.log("Error: Can't connect to server or not authorized.");
+		    var alertPopup = $ionicPopup.alert({
+				title: 'Error',
+				template: "Can't connect to server or not authorized."
+            });
+            alertPopup.then(function (res) {
+            	// What to do after clicking ok?
+            });
 		});
 	});
 	var directionsService;
@@ -313,7 +325,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	};
 	var setup_map = function($latitude, $longitude){
 	    $scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
-	    directionsService = new google.maps.DirectionsService();
+	    directionsService = new google.maps.DirectionsSevice();
 	    calcRoute(my_latlng, pickup_latlng);
 	    calcRoute(pickup_latlng, dropoff_latlng);
 	    $scope.map_ready = true;
@@ -330,12 +342,12 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    $scope.points = $scope.points.concat(response.routes[0].overview_path);
 		} else {
 		    var alertPopup = $ionicPopup.alert({
-			title: 'Cannot find address at this location!',
-			template: 'Please try again!'
-                    });
-                    alertPopup.then(function (res) {
-			// console.log('Google route unsuccesful! Please try again!');
-                    });
+				title: 'Cannot find address at this location!',
+				template: 'Please try again!'
+            });
+            alertPopup.then(function (res) {
+				// console.log('Google route unsuccesful! Please try again!');
+            });
 		}
 	    });
 	}
@@ -363,12 +375,21 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    console.log("delivery accepted");
 		}, function($response){
 		    console.log("Error: Could not submit request.");
+		    var alertPopup = $ionicPopup.alert({
+				title: 'Error',
+				template: $response.data.message
+            });
+            alertPopup.then(function (res) {
+            	// What to do after clicking ok?
+            });
 		    //error
 		});
 	}
     })
 
 .controller("checkout_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods, $ionicPopup){
+	$scope.payment_choice = {};
+	token ="";
 	$scope.payment_methods = [];
 	PaymentMethods.get().promise.then(function(response){
 		$scope.payment_methods = response;
@@ -376,11 +397,12 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	});
 
 	$scope.confirm = function() {
+		token = $scope.payment_choice.token;
 		$http({
 		    url: "http://mealcarrier.com:8080/users/" + store.get('user_id') + "/payment_methods",
 		    method: "POST",
 		    data: {
-		    	payment_method_nonce: "fake-valid-nonce"
+		    	payment_method_token: "token"
 		    	// payment_method_nonce: $stateParams.payment_method_nonce
 		    }
 		})
@@ -390,20 +412,27 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    console.log($response.data.payment_method_token);
 		    // PaymentMethods.add($response.data.payment_method_token);
 		    console.log($response.data.message);
-			var promise = request.submit();
+			var promise = Request.submit();
 			promise.then(
 			    function(data){
 			    	// success
 					// console.log(data);
 					if (!data.success) {
 					    console.log(data.message);
+    					    var alertPopup = $ionicPopup.alert({
+							title: 'Request created!',
+							template: 'We will notify you when someone has accepted to fulfill your request.'
+	                    });
+	                    alertPopup.then(function (res) {
+            			    
+	                    });
 					} else {
 					    var alertPopup = $ionicPopup.alert({
 							title: 'Request created!',
 							template: 'We will notify you when someone has accepted to fulfill your request.'
 	                    });
 	                    alertPopup.then(function (res) {
-
+            			    $state.go('messages');
 	                    });
 					}
 			    },
@@ -414,6 +443,13 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 			);
 		}, function($response){
 		    console.log("Error: Could not submit request.");
+		    var alertPopup = $ionicPopup.alert({
+				title: 'Error',
+				template: "Could not submit request."
+            });
+            alertPopup.then(function (res) {
+            	// What to do after clicking ok?
+            });
 		    //error
 		});
 	}
