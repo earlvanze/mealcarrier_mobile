@@ -40,10 +40,30 @@ angular.module("mealcarrier.services", [])
             payment_methods.push(payment_method);
 
             store.set('payment_methods', payment_methods);
-            return store.get("payment_methods");
+            return payment_methods;
         };
         factory.get = function() {
-            return store.get("payment_methods");
+            return payment_methods;
+        };
+        return factory;
+    }])
+
+    .factory('BraintreeClientToken', ["store", "$http", "$q", function(store, $http, $q) {
+        var client_token = store.get('client_token') || "";
+        var factory = {};
+
+		update = function($deferred){
+		    $http.get("http://mealcarrier.com:8080/users/" + store.get('user_id') + "/client_token")
+		    .success(function($client_token, $status, $headers, $config){
+		    	store.set('client_token', $client_token);
+			    $deferred.resolve($client_token);
+		    });
+	    };
+
+        factory.get = function() {
+		    var $deferred = $q.defer();
+		    update($deferred);
+		    return $deferred.promise;
         };
         return factory;
     }])
