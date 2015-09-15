@@ -1,17 +1,18 @@
 <ion-view view-title="Payment Method">
 	<ion-content>
-	    <ion-radio ng-model="payment_choice" ng-repeat="payment_method in payment_methods">
+	    <ion-radio ng-model="payment_choice" ng-repeat="payment_method in payment_methods track by $index">
 				<h3>
-					{{payment_method}}
+					{{payment_method.cardType}} {{payment_method.last4}}
+					<span ng-if="payment_method.default">
+						(default)
+					</span>
 				</h3>
 		</ion-radio>
 		<ion-radio ng-model="payment_choice" ui-sref="braintree_payment">New Payment Method</ion-radio>
 		<div style="text-align: center">
-			<a ui-sref="deliveries" ui-sref-opts="{inherit: false}">
-				<button class="button button-positive" ng-click="confirm()">
-					Pay $2
-				</button>
-			</a>
+			<button class="button button-positive" ng-click="confirm()">
+				Pay $2
+			</button>
 		</div>
 	</ion-content>
 </ion-view>

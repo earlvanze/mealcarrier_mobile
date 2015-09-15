@@ -32,18 +32,50 @@ angular.module("mealcarrier.services", [])
 	    }
 	}])
 
-    .factory('PaymentMethods', ['store', function(store) {
-        var payment_methods = store.get('payment_methods') || [];
+    .factory('PaymentMethods', ['store', '$http', "$q", function(store, $http, $q) {
+        // var payment_methods = store.get('payment_methods') || [];
+        // var payment_methods = [];
         var factory = {};
 
-        factory.add = function(payment_method) {
-            payment_methods.push(payment_method);
+		update = function($deferred){
+		    $http.get("http://mealcarrier.com:8080/users/" + store.get('user_id') + "/payment_methods")
+		    .success(function($payment_methods, $status, $headers, $config){
+		    	// console.log($payment_methods);
+		    	// store.set('payment_methods', $payment_methods);
+			    $deferred.resolve($payment_methods);
+		    });
+	    };
 
-            store.set('payment_methods', payment_methods);
-            return store.get("payment_methods");
-        };
+        // factory.add = function(payment_method) {
+        //     $payment_methods.push(payment_method);
+
+        //     // store.set('payment_methods', payment_methods);
+        //     return $payment_methods;
+        // };
         factory.get = function() {
-            return store.get("payment_methods");
+		    var $deferred = $q.defer();
+		    update($deferred);
+		    return $deferred;
+        };
+        return factory;
+    }])
+
+    .factory('BraintreeClientToken', ["store", "$http", "$q", function(store, $http, $q) {
+        // var client_token = store.get('client_token') || "";
+        var factory = {};
+
+		update = function($deferred){
+		    $http.get("http://mealcarrier.com:8080/users/" + store.get('user_id') + "/client_token")
+		    .success(function($client_token, $status, $headers, $config){
+		    	store.set('client_token', $client_token);
+			    $deferred.resolve($client_token);
+		    });
+	    };
+
+        factory.get = function() {
+		    var $deferred = $q.defer();
+		    update($deferred);
+		    return $deferred;
         };
         return factory;
     }])
@@ -58,7 +90,7 @@ angular.module("mealcarrier.services", [])
     	var delivery_notes = '';
 
     	this.set = function(request) {
-	    	var user_id = store.get('user_id');
+	    	user_id = store.get('user_id');
     		dropoff_latitude = request.dropoff_latitude;
 			dropoff_longitude = request.dropoff_longitude;
 		    pickup_latitude = request.pickup_latitude;
@@ -103,7 +135,7 @@ angular.module("mealcarrier.services", [])
 	    var me = {};
 
 	    me.getUserMessages = function(d) {
-	      /*
+		/*
 	      var endpoint =
 	        'http://www.mocky.io/v2/547cf341501c337f0c9a63fd?callback=JSON_CALLBACK';
 	      return $http.jsonp(endpoint).then(function(response) {
@@ -115,15 +147,17 @@ angular.module("mealcarrier.services", [])
 	      */
 	      var deferred = $q.defer();
 	      
-			 setTimeout(function() {
-	      	deferred.resolve(getMockMessages());
-		    }, 1500);
+		setTimeout(function() {
+	      	    deferred.resolve(me.getMockMessage());
+		}, 1500);
 	      
 	      return deferred.promise;
 	    };
 
-	    me.getMockMessage = function() {
-	      return {
+	      me.getMockMessage = function() {
+		  console.log("MOCK");
+
+		  return {
 	        userId: '534b8e5aaa5e7afc1b23e69b',
 	        date: new Date(),
 	        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'

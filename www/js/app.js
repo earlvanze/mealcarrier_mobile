@@ -195,7 +195,7 @@ angular.module("mealcarrier",
 	.state("messaging", {
       url: "/messaging",
       controller: "messaging_controller",
-      templateUrl: "templates/messaging.html"
+      templateUrl: "templates/old_messaging.html"
     })
     .state("account", {
       url: "/account",

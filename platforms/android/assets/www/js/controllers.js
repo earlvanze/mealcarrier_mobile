@@ -128,7 +128,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 .controller("delivery_details_controller", function($scope, $stateParams, $http, store, $state, uiGmapGoogleMapApi, $ionicLoading, Request){
 	// $ionicLoading.show();
 	$scope.request = {};
-	
+    $scope.map_ready = false;
+    
 	navigator.geolocation.getCurrentPosition(function($position){
 	    // success!
 	    setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
@@ -151,7 +152,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 						}
 					}
 				};
-			update_geocode();
+		update_geocode();
+		$scope.map_ready = true;
 			// $ionicLoading.hide();
 	    });
 	}
@@ -167,6 +169,9 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	    });
 	}
 
+    
+    // still needed?
+    // delete?
 	$scope.geocode = function(){
 	    geocoder.geocode({"address": $scope.marker.pretty_address}, function($results, $status){
 			if($status == "ZERO_RESULTS"){
@@ -225,7 +230,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
     $scope.pull_requests = function(){
     	$http({
 		    method: "GET",
-		    url: "http://mealcarrier.com:8080/requests"
+		    url: "http://mealcarrier.com:8080/requests/available"
 		})
 		.then(function($response){
 		    //success
@@ -237,55 +242,69 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    //error
 		});
     }
-    // $scope.deliveries = [{}, {}];
 })
 
     .controller("request_details_controller", function($scope, $stateParams, $http, store, $state, uiGmapGoogleMapApi, $ionicLoading, $ionicPopup){
+	
 	// $ionicLoading.show();
 	$scope.request = {};
-
+	$scope.map_ready = false;
 	$scope.markers = [];
 	
-	$http({
-	    method: "GET",
-	    url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id
-	})
-	    .then(function($response){
-		//success
-		$scope.request = $response.data;
-	    }, function($response){
-		console.log($response);
-		console.log("Error: Can't connect to server or not authorized.");
-		//error
-	    });
-	// dropoff_location[1] is currently set to latitude, as returned by the server.
-	// dropoff_location[0] is the longitude. This should really be an object instead of an array, or at least the array should be in the right order. The code is consistent throughout the app though.
 	
-	navigator.geolocation.getCurrentPosition(function($position){
-	    // success!
-	    setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-	    my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-	    dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
+	uiGmapGoogleMapApi.then(function(maps){
+	    // get details for specific request
+	    $http({
+		method: "GET",
+		url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id
+	    })
+		.then(function($response){
+		    //success
+		    $scope.markers[0] = {latitude: $response.data.pickup_location.latitude,
+					 longitude: $response.data.pickup_location.longitude,
+					 icon: "img/pickup_marker_icon.png",
+					 id: "pickup"};
+		    $scope.request = $response.data;
+
+		    // dropoff_location[1] is currently set to latitude, as returned by the server.
+		    // dropoff_location[0] is the longitude. This should really be an object instead of an array, or at least the array should be in the right order. The code is consistent throughout the app though.
 
 
-	    
-	    $scope.markers[0] = {
-		latitude: parseFloat($position.coords.latitude),
-		longitude: parseFloat($position.coords.longitude),
-		icon: "/android_asset/www/img/current_location.png",
-		id: "myself"
-	    };
-	    $scope.markers[1] = {
-		latitude: parseFloat($scope.request.dropoff_location[1]),
-		longitude: parseFloat($scope.request.dropoff_location[0]),
-		id: "dropoff"
+		    // try to get current location
+		    navigator.geolocation.getCurrentPosition(function($position){
+			// success!
 
-	    };
-	}, function($error){
-	    setup_map({latitude: 0, longitude: 0});
-	    // error!
+			my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
+			dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
+			pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);			
+			
+			$scope.markers[1] = {
+			    latitude: parseFloat($position.coords.latitude),
+			    longitude: parseFloat($position.coords.longitude),
+			    icon: "img/current_location_marker_icon.png",
+			    id: "myself"
+			};
+			$scope.markers[2] = {
+			    latitude: parseFloat($scope.request.dropoff_location[1]),
+			    longitude: parseFloat($scope.request.dropoff_location[0]),
+			    icon: "img/dropoff_marker_icon.png",
+			    id: "dropoff"
+			};
+			setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
+			
+		    }, function($error){
+			alert($error);
+			console.log($error);
+			// error!
+		    });
+
+		    
+		}, function($response){
+		    //error
+		    console.log($response);
+		    console.log("Error: Can't connect to server or not authorized.");
+		});
 	});
-	
 	var directionsService;
 	$scope.points = [];
 	$scope.stroke = {
@@ -293,17 +312,12 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	    weight: 2
 	};
 	var setup_map = function($latitude, $longitude){
-	    uiGmapGoogleMapApi.then(function(maps) {
-		$scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
-		$scope.marker = {coords: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])},
-				 id: "dropoff_location",
-				 options: {draggable: false}
-				};
-		directionsService = new google.maps.DirectionsService();
-		calcRoute(my_latlng, dropoff_latlng);
-		// $ionicLoading.hide();
-	    });
-	}
+	    $scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
+	    directionsService = new google.maps.DirectionsService();
+	    calcRoute(my_latlng, pickup_latlng);
+	    calcRoute(pickup_latlng, dropoff_latlng);
+	    $scope.map_ready = true;
+	};
 
 	var calcRoute = function(start, end) {
 	    var request = {
@@ -313,7 +327,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	    };
 	    directionsService.route(request, function(response, status) {
 		if (status == google.maps.DirectionsStatus.OK) {
-		    $scope.points = response.routes[0].overview_path;
+		    $scope.points = $scope.points.concat(response.routes[0].overview_path);
 		} else {
 		    var alertPopup = $ionicPopup.alert({
 			title: 'Cannot find address at this location!',
@@ -334,17 +348,19 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	$scope.accept_delivery = function(){
 	    // console.log("Confirming delivery");
 	    $http({
-		url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
-		method: "PUT",
-		data: {
-		    accepted: true,
-		    carrier_id: store.get('user_id')
-		}
+			url: "http://mealcarrier.com:8080/requests/" + $stateParams.request_id,
+			method: "PUT",
+			data: {
+			    accepted: true,
+			    carrier_id: store.get('user_id'),
+			    accepted_time: Date.now()
+			}
 	    })
 		.then(function($response){
 		    //success
 		    console.log($response);
-		    //		    $state.go('messaging');
+		    $state.go('messages');
+		    console.log("delivery accepted");
 		}, function($response){
 		    console.log("Error: Could not submit request.");
 		    //error
@@ -352,31 +368,16 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	}
     })
 
-    .controller("checkout_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods){
-	console.log(PaymentMethods.get());
-	$scope.payment_methods = PaymentMethods.get();
-
-	// This clientToken has been generated by the Meal Carrier server.
-	var clientToken = "eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIzYmE2MmY2NjkwYjBiMTc3ZjdhMzU0NTc0ZWI1MjdiZTI3MDkzZjc2MWU5NjVhY2ZiOGEwZmVkYTIyZTY1MmM3fGNyZWF0ZWRfYXQ9MjAxNS0wOC0xN1QxNToxNTozMi4wMTU3ODgyODIrMDAwMFx1MDAyNm1lcmNoYW50X2lkPXc0ZzRkbTk2cTdrYzhiazZcdTAwMjZwdWJsaWNfa2V5PWtnanh3OXM1MzVrNmRjeXYiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvdzRnNGRtOTZxN2tjOGJrNi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzL3c0ZzRkbTk2cTdrYzhiazYvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIn0sInRocmVlRFNlY3VyZUVuYWJsZWQiOmZhbHNlLCJwYXlwYWxFbmFibGVkIjp0cnVlLCJwYXlwYWwiOnsiZGlzcGxheU5hbWUiOiJNZWFsIENhcnJpZXIiLCJjbGllbnRJZCI6bnVsbCwicHJpdmFjeVVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS9wcCIsInVzZXJBZ3JlZW1lbnRVcmwiOiJodHRwOi8vZXhhbXBsZS5jb20vdG9zIiwiYmFzZVVybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXNzZXRzVXJsIjoiaHR0cHM6Ly9jaGVja291dC5wYXlwYWwuY29tIiwiZGlyZWN0QmFzZVVybCI6bnVsbCwiYWxsb3dIdHRwIjp0cnVlLCJlbnZpcm9ubWVudE5vTmV0d29yayI6dHJ1ZSwiZW52aXJvbm1lbnQiOiJvZmZsaW5lIiwidW52ZXR0ZWRNZXJjaGFudCI6ZmFsc2UsImJyYWludHJlZUNsaWVudElkIjoibWFzdGVyY2xpZW50MyIsIm1lcmNoYW50QWNjb3VudElkIjoibWVhbGNhcnJpZXIiLCJjdXJyZW5jeUlzb0NvZGUiOiJVU0QifSwiY29pbmJhc2VFbmFibGVkIjpmYWxzZSwibWVyY2hhbnRJZCI6Inc0ZzRkbTk2cTdrYzhiazYiLCJ2ZW5tbyI6Im9mZiJ9";
-	$scope.show_button = false;
-	braintree.setup(clientToken, "dropin", {
-		container: "payment-form",
-		singleUse: false,
-		onReady: function() {
-			console.log('Braintree is ready');
-			$scope.$apply(function(){
-				$scope.show_button = true;
-	        });
-	  //   	onPaymentMethodReceived: function(obj) {
-	  //       	// doSomethingWithTheNonce(obj.nonce);
-	  //       	console.log(obj.nonce);
-			// }
-		}
+.controller("checkout_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods, $ionicPopup){
+	$scope.payment_methods = [];
+	PaymentMethods.get().promise.then(function(response){
+		$scope.payment_methods = response;
+		console.log(response);
 	});
 
 	$scope.confirm = function() {
 		$http({
-		    url: "http://mealcarrier.com:8080/payment/payment_methods",
+		    url: "http://mealcarrier.com:8080/users/" + store.get('user_id') + "/payment_methods",
 		    method: "POST",
 		    data: {
 		    	payment_method_nonce: "fake-valid-nonce"
@@ -387,20 +388,30 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    //success
 		    // save payment_method_token
 		    console.log($response.data.payment_method_token);
-		    PaymentMethods.add($response.data.payment_method_token);
+		    // PaymentMethods.add($response.data.payment_method_token);
 		    console.log($response.data.message);
 			var promise = request.submit();
 			promise.then(
 			    function(data){
 			    	// success
 					// console.log(data);
+					if (!data.success) {
+					    console.log(data.message);
+					} else {
+					    var alertPopup = $ionicPopup.alert({
+							title: 'Request created!',
+							template: 'We will notify you when someone has accepted to fulfill your request.'
+	                    });
+	                    alertPopup.then(function (res) {
+
+	                    });
+					}
 			    },
 			    function(error){
 			    	// error
 					console.log("Error: " + error);
 			    }
 			);
-		    $state.go('deliveries');
 		}, function($response){
 		    console.log("Error: Could not submit request.");
 		    //error
@@ -408,30 +419,32 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	}
 })
 
-.controller("braintree_payment_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods){
+.controller("braintree_payment_controller", function($scope, $http, $state, $stateParams, store, Request, PaymentMethods, BraintreeClientToken, $ionicPopup){
 
 	// This clientToken has been generated by the Meal Carrier server.
-	var clientToken = "eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIzYmE2MmY2NjkwYjBiMTc3ZjdhMzU0NTc0ZWI1MjdiZTI3MDkzZjc2MWU5NjVhY2ZiOGEwZmVkYTIyZTY1MmM3fGNyZWF0ZWRfYXQ9MjAxNS0wOC0xN1QxNToxNTozMi4wMTU3ODgyODIrMDAwMFx1MDAyNm1lcmNoYW50X2lkPXc0ZzRkbTk2cTdrYzhiazZcdTAwMjZwdWJsaWNfa2V5PWtnanh3OXM1MzVrNmRjeXYiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvdzRnNGRtOTZxN2tjOGJrNi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzL3c0ZzRkbTk2cTdrYzhiazYvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIn0sInRocmVlRFNlY3VyZUVuYWJsZWQiOmZhbHNlLCJwYXlwYWxFbmFibGVkIjp0cnVlLCJwYXlwYWwiOnsiZGlzcGxheU5hbWUiOiJNZWFsIENhcnJpZXIiLCJjbGllbnRJZCI6bnVsbCwicHJpdmFjeVVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS9wcCIsInVzZXJBZ3JlZW1lbnRVcmwiOiJodHRwOi8vZXhhbXBsZS5jb20vdG9zIiwiYmFzZVVybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXNzZXRzVXJsIjoiaHR0cHM6Ly9jaGVja291dC5wYXlwYWwuY29tIiwiZGlyZWN0QmFzZVVybCI6bnVsbCwiYWxsb3dIdHRwIjp0cnVlLCJlbnZpcm9ubWVudE5vTmV0d29yayI6dHJ1ZSwiZW52aXJvbm1lbnQiOiJvZmZsaW5lIiwidW52ZXR0ZWRNZXJjaGFudCI6ZmFsc2UsImJyYWludHJlZUNsaWVudElkIjoibWFzdGVyY2xpZW50MyIsIm1lcmNoYW50QWNjb3VudElkIjoibWVhbGNhcnJpZXIiLCJjdXJyZW5jeUlzb0NvZGUiOiJVU0QifSwiY29pbmJhc2VFbmFibGVkIjpmYWxzZSwibWVyY2hhbnRJZCI6Inc0ZzRkbTk2cTdrYzhiazYiLCJ2ZW5tbyI6Im9mZiJ9";
-	$scope.show_button = false;
-	braintree.setup(clientToken, "dropin", {
-		container: "payment-form",
-		singleUse: false,
-		onReady: function() {
-			console.log('Braintree is ready');
-			$scope.$apply(function(){
-				$scope.show_button = true;
-	        });
-		},
-    	onPaymentMethodReceived: function(obj) {
-		    // Do some logic in here.
-		    // When you're ready to submit the form:
-		    myForm.submit();
-		}
+	BraintreeClientToken.get().promise.then(function(response){
+		clientToken = response;
+		// console.log(response);
+		$scope.show_button = false;
+		braintree.setup(clientToken, "dropin", {
+			container: "payment-form",
+			singleUse: false,
+			onReady: function() {
+				console.log('Braintree is ready');
+				$scope.$apply(function(){
+					$scope.show_button = true;
+		        });
+			},
+	    	onPaymentMethodReceived: function(obj) {
+			    // Do some logic in here.
+			    // When you're ready to submit the form:
+			}
+		});
 	});
 
 	$scope.confirm = function() {
 		$http({
-		    url: "http://mealcarrier.com:8080/payment/payment_methods",
+		    url: "http://mealcarrier.com:8080/users/" + store.get('user_id') + "/payment_methods",
 		    method: "POST",
 		    data: {
 		    	payment_method_nonce: "fake-valid-nonce"
@@ -442,26 +455,104 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 		    //success
 		    // save payment_method_token
 		    console.log($response.data.payment_method_token);
-		    PaymentMethods.add($response.data.payment_method_token);
+		    // PaymentMethods.add($response.data.payment_method_token);
 		    console.log($response.data.message);
-			var promise = request.submit();
+			var promise = Request.submit();
 			promise.then(
 			    function(data){
 			    	// success
 					// console.log(data);
+					if (!data.success) {
+					    console.log(data.message);
+					} else {
+					    var alertPopup = $ionicPopup.alert({
+							title: 'Request created!',
+							template: 'We will notify you when someone has accepted to fulfill your request.'
+	                    });
+	                    alertPopup.then(function (res) {
+            			    $state.go('messages');
+	                    });
+					}
 			    },
 			    function(error){
 			    	// error
 					console.log("Error: " + error);
 			    }
 			);
-		    $state.go('deliveries');
 		}, function($response){
 		    console.log("Error: Could not submit request.");
 		    //error
 		});
 	}
 })
+
+
+    .controller("messages_controller", function($scope, $ionicScrollDelegate){
+	var User = {
+	    get: function(string){
+		return 13;
+	    }
+	};
+
+	$scope.my_id = User.get("id");
+	
+	var $messages = [
+	    {
+		to: 13,
+		from: 11,
+		text: "This is a thing"
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "Listen to me"
+	    },
+	    {
+		to: 11,
+		from: 13,
+		text: "Yes. I am excited to work."
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "Blah blah blah blah"
+	    },
+	    {
+		to: 11,
+		from: 13,
+		text: "Tell my why I can't see too far."
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "This text makes no sense"
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "I agree?"
+	    }
+	];
+
+	$scope.send_message = function(){
+	    $scope.messages.push(
+		{
+		    to: 11,
+		    from: 13,
+		    text: $scope.new_message
+		}
+	    );
+	    $scope.new_message = "";
+	    $ionicScrollDelegate.scrollBottom();
+	}
+	
+	
+	$scope.messages = $messages;
+    })
+
+
+
+
 
 .controller('messaging_controller', ['$scope', '$rootScope', '$state',
   '$stateParams', 'MockService', '$ionicActionSheet',
@@ -499,11 +590,10 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
       console.log('UserMessages $ionicView.enter');
 
       getMessages();
-      
-      $timeout(function() {
-        footerBar = document.body.querySelector('#userMessagesView .bar-footer');
-        scroller = document.body.querySelector('#userMessagesView .scroll-content');
-        txtInput = angular.element(footerBar.querySelector('textarea'));
+	$timeout(function() {
+	    footerBar = angular.element(".bar-footer");
+	    scroller = angular.element("#userMessagesView .scroll-content");
+	    txtInput = angular.element(".bar-footer textarea");
       }, 5000);
 
       messageCheckTimer = $interval(function() {
@@ -534,9 +624,11 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
         $scope.doneLoading = true;
         $scope.messages = data.messages;
 
-        $timeout(function() {
-          viewScroll.scrollBottom();
-        }, 5000);
+	  /*
+            $timeout(function() {
+            viewScroll.scrollBottom();
+            }, 6000);
+	  */
       });
     }
 

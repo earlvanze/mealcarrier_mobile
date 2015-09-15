@@ -1,12 +1,20 @@
 <ion-view view-title="Delivery Details" ng-init="init_marker()">
   <ion-content>
-    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true">
+    <ui-gmap-google-map center='map.center'
+			zoom='map.zoom'
+			draggable="true"
+			ng-if="map_ready">
       <ui-gmap-marker coords="marker.coords"
 		      idKey="marker.id"
 		      options="marker.options"
 		      events="marker.events"
-		  ></ui-gmap-marker>
+		      ></ui-gmap-marker>
     </ui-gmap-google-map>
+    <div class="gmap_loading_spinner_wrapper" ng-if="!map_ready">
+      <ion-spinner class="gmap_loading_spinner"></ion-spinner>
+      <br>
+      loading map
+    </div>
 
     <!-- {{position.latitude}}, {{position.longitude}} -->
 
@@ -24,9 +32,6 @@
     <div style="text-align: center">
       <button class="button button-positive" ng-click="submit_request()">
 	Submit
-      </button>
-      <button class="button button-positive" ng-click="geocode()">
-	Geocode
       </button>
     </div>
   </ion-content>

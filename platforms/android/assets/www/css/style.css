@@ -206,3 +206,15 @@ a.autolinker {
 .loader .ion-loading-c {
   font-size: 64px;
 }
+
+
+
+
+.gmap_loading_spinner_wrapper{
+    text-align: center;
+}
+
+.gmap_loading_spinner svg{
+    height: 50vw;
+    width: 50vw;
+}

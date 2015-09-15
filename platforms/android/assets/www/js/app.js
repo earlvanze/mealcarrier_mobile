@@ -183,10 +183,19 @@ angular.module("mealcarrier",
       controller: "braintree_payment_controller",
       templateUrl: "templates/braintree_payment.html"
     })
-    .state("messaging", {
+
+
+        .state("messages", {
+	    url: "/messages",
+	    controller: "messages_controller",
+	    templateUrl: "templates/messages.html"
+	})
+
+
+	.state("messaging", {
       url: "/messaging",
       controller: "messaging_controller",
-      templateUrl: "templates/messaging.html"
+      templateUrl: "templates/old_messaging.html"
     })
     .state("account", {
       url: "/account",

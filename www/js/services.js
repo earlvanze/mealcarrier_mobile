@@ -32,24 +32,36 @@ angular.module("mealcarrier.services", [])
 	    }
 	}])
 
-    .factory('PaymentMethods', ['store', function(store) {
-        var payment_methods = store.get('payment_methods') || [];
+    .factory('PaymentMethods', ['store', '$http', "$q", function(store, $http, $q) {
+        // var payment_methods = store.get('payment_methods') || [];
+        // var payment_methods = [];
         var factory = {};
 
-        factory.add = function(payment_method) {
-            payment_methods.push(payment_method);
+		update = function($deferred){
+		    $http.get("http://mealcarrier.com:8080/users/" + store.get('user_id') + "/payment_methods")
+		    .success(function($payment_methods, $status, $headers, $config){
+		    	// console.log($payment_methods);
+		    	// store.set('payment_methods', $payment_methods);
+			    $deferred.resolve($payment_methods);
+		    });
+	    };
 
-            store.set('payment_methods', payment_methods);
-            return payment_methods;
-        };
+        // factory.add = function(payment_method) {
+        //     $payment_methods.push(payment_method);
+
+        //     // store.set('payment_methods', payment_methods);
+        //     return $payment_methods;
+        // };
         factory.get = function() {
-            return payment_methods;
+		    var $deferred = $q.defer();
+		    update($deferred);
+		    return $deferred;
         };
         return factory;
     }])
 
     .factory('BraintreeClientToken', ["store", "$http", "$q", function(store, $http, $q) {
-        var client_token = store.get('client_token') || "";
+        // var client_token = store.get('client_token') || "";
         var factory = {};
 
 		update = function($deferred){
@@ -63,7 +75,7 @@ angular.module("mealcarrier.services", [])
         factory.get = function() {
 		    var $deferred = $q.defer();
 		    update($deferred);
-		    return $deferred.promise;
+		    return $deferred;
         };
         return factory;
     }])
