@@ -249,7 +249,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	
 	// $ionicLoading.show();
 	$scope.request = {};
-	
+	$scope.map_ready = false;
 	$scope.markers = [];
 	
 	
@@ -277,10 +277,7 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 
 			my_latlng = getLatLngFromCoords(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
 			dropoff_latlng = getLatLngFromCoords($scope.request.dropoff_location[1], $scope.request.dropoff_location[0]);
-			pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);
-
-			setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
-			
+			pickup_latlng = getLatLngFromCoords($scope.markers[0].latitude, $scope.markers[0].longitude);			
 			
 			$scope.markers[1] = {
 			    latitude: parseFloat($position.coords.latitude),
@@ -293,8 +290,8 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 			    longitude: parseFloat($scope.request.dropoff_location[0]),
 			    icon: "img/dropoff_marker_icon.png",
 			    id: "dropoff"
-			    
 			};
+			setup_map(parseFloat($position.coords.latitude), parseFloat($position.coords.longitude));
 			
 		    }, function($error){
 			alert($error);
@@ -317,14 +314,10 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	};
 	var setup_map = function($latitude, $longitude){
 	    $scope.map = {center: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])}, zoom: 16};
-	    $scope.marker = {coords: {latitude: parseFloat($scope.request.dropoff_location[1]), longitude: parseFloat($scope.request.dropoff_location[0])},
-			     id: "dropoff_location",
-			     options: {draggable: false}
-			    };
 	    directionsService = new google.maps.DirectionsService();
 	    calcRoute(my_latlng, pickup_latlng);
 	    calcRoute(pickup_latlng, dropoff_latlng);
-	    // $ionicLoading.hide();
+	    $scope.map_ready = true;
 	};
 
 	var calcRoute = function(start, end) {
@@ -509,6 +502,74 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
 	}
 })
 
+
+    .controller("messages_controller", function($scope, $ionicScrollDelegate){
+	var User = {
+	    get: function(string){
+		return 13;
+	    }
+	};
+
+	$scope.my_id = User.get("id");
+	
+	var $messages = [
+	    {
+		to: 13,
+		from: 11,
+		text: "This is a thing"
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "Listen to me"
+	    },
+	    {
+		to: 11,
+		from: 13,
+		text: "Yes. I am excited to work."
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "Blah blah blah blah"
+	    },
+	    {
+		to: 11,
+		from: 13,
+		text: "Tell my why I can't see too far."
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "This text makes no sense"
+	    },
+	    {
+		to: 13,
+		from: 11,
+		text: "I agree?"
+	    }
+	];
+
+	$scope.send_message = function(){
+	    $scope.messages.push(
+		{
+		    to: 11,
+		    from: 13,
+		    text: $scope.new_message
+		}
+	    );
+	    $scope.new_message = "";
+	    $ionicScrollDelegate.scrollBottom();
+	}
+	
+	
+	$scope.messages = $messages;
+    })
+
+
+
+
+
 .controller('messaging_controller', ['$scope', '$rootScope', '$state',
   '$stateParams', 'MockService', '$ionicActionSheet',
   '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
@@ -545,11 +606,10 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
       console.log('UserMessages $ionicView.enter');
 
       getMessages();
-      
-      $timeout(function() {
-        footerBar = document.body.querySelector('#userMessagesView .bar-footer');
-        scroller = document.body.querySelector('#userMessagesView .scroll-content');
-        txtInput = angular.element(footerBar.querySelector('textarea'));
+	$timeout(function() {
+	    footerBar = angular.element(".bar-footer");
+	    scroller = angular.element("#userMessagesView .scroll-content");
+	    txtInput = angular.element(".bar-footer textarea");
       }, 5000);
 
       messageCheckTimer = $interval(function() {
@@ -580,9 +640,11 @@ angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.f
         $scope.doneLoading = true;
         $scope.messages = data.messages;
 
-        $timeout(function() {
-          viewScroll.scrollBottom();
-        }, 5000);
+	  /*
+            $timeout(function() {
+            viewScroll.scrollBottom();
+            }, 6000);
+	  */
       });
     }
 

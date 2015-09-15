@@ -15,14 +15,14 @@ have templates inline in this html file if you'd like).
     </div>
 </div>
 
-  <ion-content has-bouncing="true" class="has-header has-footer" 
-      delegate-handle="userMessageScroll">
+<ion-content has-bouncing="true" class="has-header has-footer">
+  <ion-scroll
+     delegate-handle="userMessageScroll">
     
       <div ng-repeat="message in messages" class="message-wrapper"
           on-hold="onMessageHold($event, $index, message)">
 
           <div ng-if="user._id !== message.userId">
-              
             <img ng-click="viewProfile(message)" class="profile-pic left" 
                   ng-src="{{toUser.pic}}" onerror="onProfilePicError(this)" />
 
@@ -63,6 +63,7 @@ have templates inline in this html file if you'd like).
           <div class="cf"></div>
 
       </div>
+      </ion-scroll>
   </ion-content>
 
   <form name="sendMessageForm" ng-submit="sendMessage(sendMessageForm)" novalidate>
