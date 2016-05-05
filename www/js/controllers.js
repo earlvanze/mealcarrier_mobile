@@ -1,7 +1,44 @@
-angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.formValidateAfter", "uiGmapgoogle-maps"])
+angular.module("mealcarrier.controller", ["mealcarrier.services", "mealcarrier.formValidateAfter", "uiGmapgoogle-maps", "ngCordova"])
 
 .controller("menu_controller", function($scope, $ionicSideMenuDelegate, $state){
 
+})
+
+.controller("check_controller", function($scope, $cordovaInAppBrowser, $ionicPopup) {
+	document.addEventListener("deviceready", onDeviceReady, false);
+     
+    function onDeviceReady() {
+         
+        var scheme;
+ 
+        // Don't forget to add the org.apache.cordova.device plugin!
+        if(device.platform === 'iOS') {
+            scheme = 'twitter://';
+        }
+        else if(device.platform === 'Android') {
+            scheme = 'com.twitter.android';
+        }
+         
+        appAvailability.check(
+            scheme, // URI Scheme
+            function() {  // Success callback
+                window.open('twitter://user?screen_name=earlvanze', '_system', 'location=no');
+                console.log('Twitter is available');
+			    var alertPopup = $ionicPopup.alert({
+					title: 'Twitter is available',
+					template: "Click Ok to Launch Twitter"
+	            });
+            },
+            function() {  // Error callback
+                window.open('https://twitter.com/earlvanze', '_system', 'location=no');
+                console.log('Twitter is not available');
+			    var alertPopup = $ionicPopup.alert({
+					title: 'Twitter is not available',
+					template: "Click Ok to Open in Browser"
+	            });
+            }
+        );      
+    }       
 })
 
 // .controller("login_controller", function($scope, $http, $state, auth, store, ){

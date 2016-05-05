@@ -55,6 +55,8 @@
     <script src="js/form-validate-after.js"></script>
     <script src="js/messaging.js"></script>       <!-- Messaging, from http://codepen.io/anon/pen/xGoMoZ -->
     <script src="js/controllers.js"></script>
+    <script src="js/ng-cordova.min.js"></script>
+    <script src="cordova.js"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
@@ -67,7 +69,7 @@
 	<ion-header-bar class="bar-assertive">
           <h1 class="title">Left Menu</h1>
         </ion-header-bar>
-	<ion-content>
+	<ion-content ng-controller="check_controller">
 
 	  <ion-list>
       <ion-item ui-sref="login" menu-close="">

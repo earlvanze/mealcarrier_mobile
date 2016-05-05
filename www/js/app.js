@@ -11,7 +11,8 @@ angular.module("mealcarrier",
   "angular-storage", 
   "angular-jwt",
   "monospaced.elastic",
-  "angularMoment"
+  "angularMoment",
+  "ngCordova"
   ])
 
 // http://ionicframework.com.br/blog/authentication-in-ionic/
@@ -199,8 +200,7 @@ angular.module("mealcarrier",
       templateUrl: "templates/account.html"
     })
     ;
-    $urlRouterProvider.otherwise("/request_pickup");
-    // $urlRouterProvider.otherwise("/request_pickup");
+    //$urlRouterProvider.otherwise("/request_pickup");
 })
 
 // filters

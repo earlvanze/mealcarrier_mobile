@@ -15,14 +15,6 @@
         "is_top_level": false,
         "variables": {}
     },
-    "org.apache.cordova.device": {
-        "source": {
-            "type": "registry",
-            "id": "org.apache.cordova.device"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "com.googlemaps.ios": {
         "source": {
             "type": "git",
@@ -37,6 +29,38 @@
         "source": {
             "type": "registry",
             "id": "cordova-plugin-geolocation"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "com.lampa.startapp": {
+        "source": {
+            "type": "registry",
+            "id": "com.lampa.startapp"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-inappbrowser": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-inappbrowser"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-device": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-device"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-appavailability": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-appavailability"
         },
         "is_top_level": true,
         "variables": {}
